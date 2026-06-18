@@ -3,6 +3,8 @@ var redis = require("redis");
 console.log("HOST:", process.env.REDISHOST);
 console.log("PORT:", process.env.REDISPORT);
 console.log("PASS:", process.env.REDISPASSWORD ? "SET" : "MISSING");
+console.log("Creating Redis client...");
+
 var client = redis.createClient(
     process.env.REDISPORT,
     process.env.REDISHOST,
@@ -11,6 +13,8 @@ var client = redis.createClient(
         db: 1
     }
 );
+
+console.log("Redis address:", client.address);
 
 client.on("error", function (err) { });
 var saveDB = setInterval(function () { client.save(); }, 60000);
