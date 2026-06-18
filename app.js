@@ -5,14 +5,12 @@ console.log("PORT:", process.env.REDISPORT);
 console.log("PASS:", process.env.REDISPASSWORD ? "SET" : "MISSING");
 console.log("Creating Redis client...");
 
-var client = redis.createClient(
-    process.env.REDISPORT,
-    process.env.REDISHOST,
-    {
-        auth_pass: process.env.REDISPASSWORD,
-        db: 1
-    }
-);
+var client = redis.createClient({
+    host: process.env.REDISHOST,
+    port: parseInt(process.env.REDISPORT, 10),
+    auth_pass: process.env.REDISPASSWORD,
+    db: 1
+});
 
 console.log("Redis address:", client.address);
 
