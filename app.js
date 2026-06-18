@@ -1,6 +1,8 @@
 var FChatLib = require('fchatlib');
 var redis = require("redis");
-
+console.log("HOST:", process.env.REDISHOST);
+console.log("PORT:", process.env.REDISPORT);
+console.log("PASS:", process.env.REDISPASSWORD ? "SET" : "MISSING");
 var client = redis.createClient(
     process.env.REDISPORT,
     process.env.REDISHOST,
