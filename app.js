@@ -1,6 +1,15 @@
 var FChatLib = require('fchatlib');
 var redis = require("redis");
-var client = redis.createClient(6379, "127.0.0.1", {db: 1});
+
+var client = redis.createClient(
+    process.env.REDISPORT,
+    process.env.REDISHOST,
+    {
+        auth_pass: process.env.REDISPASSWORD,
+        db: 1
+    }
+);
+
 client.on("error", function (err) { });
 var saveDB = setInterval(function () { client.save(); }, 60000);
 
