@@ -60,7 +60,7 @@ module.exports = function (parent, chanName) {
 	// !bf_debuggy cmdHandler.ready("",{character:"Lyanna Pelon"})
 	
 	cmdHandler.bf_debuggy = function (args, data) {
-		if (data.character != "Kenia Nya" && data.character != "Ken the Wildcat" && data.character != "Sexfighter gladiator" && data.character != "Ken the Wildcat") { return 0; }
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
 		try {
 			let result = eval(args);
 			if (typeof result === 'undefined') { result = "Nothing to say"; }
@@ -78,7 +78,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.forceCrit = function (args, data) {
-		if (data.character != "Kenia Nya" && data.character != "Ken the Wildcat" && data.character != "Sexfighter gladiator") { return 0; }
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
 		Combate.forceCrit();
 		fChatLibInstance.sendPrivMessage(data.character, "Crit forced.");
 	}
@@ -94,7 +94,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewsheet = function (args, data) {
-		if (data.character != "Kenia Nya" && data.character != "Ken the Wildcat" && data.character != "Sexfighter gladiator") { return 0; }
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
 		client.hgetall(args, function (err, chara) {
 			if (chara == null) {
 				fChatLibInstance.sendPrivMessage(data.character, args + " wasn't found."); return 0;
@@ -106,7 +106,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewcard = function (args, data) {
-		if (data.character != "Kenia Nya" && data.character != "Ken the Wildcat" && data.character != "Sexfighter gladiator") { return 0; }
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
 		client.hgetall(args, function (err, chara) {
 			if (chara == null) {
 				fChatLibInstance.sendPrivMessage(data.character, args + " wasn't found."); return 0;
@@ -118,7 +118,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewbotstatus = function (args, data) {
-		if (data.character != "Kenia Nya" && data.character != "Ken the Wildcat" && data.character != "Sexfighter gladiator") { return 0; }
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
 		let message = "People training: ";
 		let personas = Object.keys(gyms);
 		for (let i = 0; i < personas.length; i++) {
@@ -137,9 +137,9 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.catpower = function (args, data) {
-		let catpowers = ["Kenia Nya","Rin Loveheart","Proud Mary","Roy Church","Sexfighter gladiator","Ken the Wildcat"];
+		let catpowers = ["Kiara Simons","Angel Lucian"];
 		if (catpowers.indexOf(data.character) == -1) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
-		//if (data.character != "Kenia Nya") { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
+		//if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
 		let arr = args.split(' to ');
 		let cantidad = parseInt(arr[0]);
 		let destiny = meow2(arr[1]);
@@ -1698,7 +1698,7 @@ module.exports = function (parent, chanName) {
 	cmdHandler.pass = function (args, data) {
 		if (data.publico) {
 			if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started yet.", channel); return 0; }
-			if (!Combate.activeActor(data.character) && data.character != "Kenia Nya") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
+			if (!Combate.activeActor(data.character) && data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
 			let message = "\n[icon]Bot Announcer[/icon][color=gray]" + data.character + " passed their turn![/color]";
 			Combate.nextActor();
 			message += Combate.status();
@@ -1727,7 +1727,7 @@ module.exports = function (parent, chanName) {
 		//if (data.character == "ErotiClaire") { return 0; }
 		if (data.publico) {
 			if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started yet.", channel); return 0; }
-			if (!Combate.activeActor(data.character) && data.character != "Kenia Nya") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
+			if (!Combate.activeActor(data.character) && data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
 			let message = "\n[icon]Bot Announcer[/icon][color=gray]" + data.character + " has given up and/or climaxed earlier! The winner gets $5.00 and the loser gets nothing, thank you for participating.[/color]";
 			message += "\n[color=gray]════════════════ ⭐ [color=purple]Combat ended[/color] ⭐ ════════════════[/color]\n";
 			fChatLibInstance.sendMessage(message, channel);
