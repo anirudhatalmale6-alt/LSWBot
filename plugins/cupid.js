@@ -3,7 +3,8 @@ var users;
 var channel;
 var g = "[b][color=green]"; var y = "[b][color=yellow]"; var r = "[b][color=red]"; var ec = "[/color][/b]";
 
-var client = redis.createClient(6379, "192.168.0.12", {db: 10});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(10);
 
 module.exports = function (parent, chanName) {
     fChatLibInstance = parent;

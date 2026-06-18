@@ -29,8 +29,8 @@ var bbcookies = "The bot smiles and hands out a basket! As she thrusts it at the
 
 var murraystuff = ["[color=red]Bill Murray walked into the room dressed as a zombie as a prank, but [user] shot and killed him in a panic![/color]", "[color=orange]Slimer came careening through the room with Dr. Venkman giving chase, but wasn't able to bust the ghost before [user] got slimed![/color]", "[color=yellow][user] spoke up against Frank Cross's [i]Scrooge[/i] commercial and was fired as a result. On Christmas Eve![/color]", "[color=green][user] was about to forfeit to the Monstars for lacking a 5th player, but Bill Murray showed up just in time to save the day![/color]", "[color=cyan]Pittsburgh weatherman Phil Connors was stuck reliving Groundhog Day over and over again. [user] was lucky enough to get to go bowling with him most of those days, though![/color]", "[color=blue][user] just landed a new job as an apprentice groundskeeper under Carl Spackler. Now go get that gopher![/color]"];
 
-var redis = require("redis");
-var client = redis.createClient(6379, "127.0.0.1", {db: 0});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(0);
 
 module.exports = function (parent, chanName) {
     fChatLibInstance = parent;

@@ -14,8 +14,8 @@ var monsters = require('./etc/monsters.js');
 var races = require('./etc/races.js');
 
 var requireNew = require('require-new');
-var redis = require("redis");
-var client = redis.createClient(6379, "192.168.0.18", {db: 3});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(3);
 
 module.exports = function (parent, chanName) {
     fChatLibInstance = parent;

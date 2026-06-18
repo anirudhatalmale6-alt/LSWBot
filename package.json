@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "fchatlib": "*",
+    "redis": "2.6.2",
     "simplejsondb": "0.0.3"
   }
 }

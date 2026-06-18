@@ -1,20 +1,7 @@
 var FChatLib = require('fchatlib');
-var redis = require("redis");
-console.log("HOST:", process.env.REDISHOST);
-console.log("PORT:", process.env.REDISPORT);
-console.log("PASS:", process.env.REDISPASSWORD ? "SET" : "MISSING");
-console.log("Creating Redis client...");
+var redisHelper = require("./redisHelper");
 
-var client = redis.createClient({
-    host: process.env.REDISHOST,
-    port: parseInt(process.env.REDISPORT, 10),
-    auth_pass: process.env.REDISPASSWORD,
-    db: 1
-});
-
-console.log("Redis address:", client.address);
-
-client.on("error", function (err) { });
+var client = redisHelper.createRedisClient(1);
 var saveDB = setInterval(function () { client.save(); }, 60000);
 
 var options = {

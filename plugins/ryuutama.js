@@ -8,8 +8,8 @@ function cyan(text) { return c+text+ec; }
 function orange(text) { return o+text+ec; }
 var fs = require('fs');
 var requireNew = require('require-new');
-var redis = require("redis");
-var client = redis.createClient(6379, "192.168.0.18", {db: 5});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(5);
 client.on("error", function (err) { console.log("Redis error " + err); });
 
 var pjBase = require('./etc/ryuutama_base_pj.js');

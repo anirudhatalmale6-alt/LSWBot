@@ -10,8 +10,8 @@ var wildPlayer = "";
 var wildColor = "";
 var g = "[b][color=green]"; var y = "[b][color=yellow]"; var r = "[b][color=red]"; var p = "[b][color=pink]"; var ec = "[/color][/b]";
 
-var redis = require("redis");
-var client = redis.createClient(6379, "127.0.0.1", {db: 14});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(14);
 
 var rps_betting = {
 	entry_fee_set: false,

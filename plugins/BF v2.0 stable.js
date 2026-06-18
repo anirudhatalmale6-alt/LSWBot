@@ -5,7 +5,7 @@ var jsonfile = require('jsonfile');
 var fs = require('fs');
 var saveDir = process.cwd()+"/saves";
 var saveFile = "/saves.js";
-var redis = require("redis");
+var redisHelper = require("../redisHelper");
 var items = require('./etc/shop.js');
 var yuni = require('./etc/yuni.js');
 var milly = require('./etc/milly.js');
@@ -13,7 +13,7 @@ var Personaje = require('./etc/personaje.js');
 var combate = require('./etc/combate.js');
 var Combate = new combate();
 var gyms = {};
-var client = redis.createClient(6379, "127.0.0.1", {db: 1});
+var client = redisHelper.createRedisClient(1);
 /////////////////////////////////////////////////////////////////////////////////////		Cambiar indulge para que solo funcione con defensas
 
 module.exports = function (parent, chanName) {

@@ -8,8 +8,8 @@ var limbo = 0;
 var g = "[color=green]"; var y = "[color=yellow]"; var r = "[color=red]"; var p = "[color=pink]"; var ec = "[/color]";
 var drinksref = "https://vinepair.com/articles/50-most-popular-cocktails-world-2017/";
 
-var redis = require("redis");
-var client = redis.createClient(6379, "127.0.0.1", {db: 15});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(15);
 
 module.exports = function (parent, chanName) {
     fChatLibInstance = parent;

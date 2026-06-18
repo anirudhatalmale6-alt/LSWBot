@@ -17,8 +17,8 @@ server.listen(6369);
 
 /*
 var FChatLib = require('fchatlib');
-var redis = require("redis");
-var client = redis.createClient(6379, "127.0.0.1", {db: 1});
+var redisHelper = require("./redisHelper");
+var client = redisHelper.createRedisClient(1);
 client.on("error", function (err) { });
 var saveDB = setInterval(function () { client.save(); }, 60000);
 

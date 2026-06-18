@@ -8,7 +8,7 @@ var requireNew = require('require-new');
 var saveDir = process.cwd()+"/saves";
 var saveFile = "/saves.js";
 var saveFile2 = "/trashcan.js";
-var redis = require("redis");
+var redisHelper = require("../redisHelper");
 var yuni = require('./etc/yuni.js');
 var milly = require('./etc/milly.js');
 var robert = require('./etc/robert.js');
@@ -20,7 +20,7 @@ var Combate = new combate();
 var tempCombate = new combate(); tempPj1 = {}; tempPj2 = {};
 var gyms = {};
 var scores = {};
-var client = redis.createClient(6379, "192.168.0.25", {db: 3});
+var client = redisHelper.createRedisClient(3);
 
 var mainBotChannel = "adh-5b5393f9514b3c25ab71";
 var roughCombatRoom = "adh-730b2671384a88f6e578";

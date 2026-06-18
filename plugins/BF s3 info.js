@@ -3,8 +3,8 @@ var channel;
 
 var requireNew = require('require-new');
 
-var redis = require("redis");
-var client = redis.createClient(6379, "192.168.0.25", {db: 3});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(3);
 
 var notregistered = "You're not registered (or come from season one or two), use !register to join the club~";
 

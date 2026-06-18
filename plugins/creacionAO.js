@@ -6,8 +6,8 @@ var g = "[color=green][b]"; var y = "[color=yellow][b]"; var r = "[color=red][r]
 function green(text) { return g+text+ec; }
 function yellow(text) { return y+text+ec; }
 function red(text) { return r+text+ec; }
-var redis = require("redis");
-var client = redis.createClient(6379, "192.168.0.18", {db: 3});
+var redisHelper = require("../redisHelper");
+var client = redisHelper.createRedisClient(3);
 var races = require('./etc/races.js');
 var Personaje = require('./etc/personaje1a.js');
 
