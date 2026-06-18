@@ -1328,47 +1328,47 @@ module.exports = function (parent, chanName) {
 	
 	cmdHandler.striptease = function (args, data) { cmdHandler.strip("me", data); cmdHandler.sexymoves("", data); }
 	
-	cmdHandler.kiss = function (args, data) { cmdHandler.attack("lips to lips "+args, data); }
-	cmdHandler.kisses = function (args, data) { cmdHandler.attack("lips to lips "+args, data); }
-	cmdHandler.fuck = function (args, data) { cmdHandler.attack("sex to sex "+args, data); }
+	cmdHandler.kiss = function (args, data) { cmdHandler.attack("lips to lips to "+args, data); }
+	cmdHandler.kisses = function (args, data) { cmdHandler.attack("lips to lips to "+args, data); }
+	cmdHandler.fuck = function (args, data) { cmdHandler.attack("sex to sex to "+args, data); }
 	cmdHandler.spank = function (args, data) {
-		cmdHandler.attack("hands to butt "+args, data);
+		cmdHandler.attack("hands to butt to "+args, data);
 		let name = args.split('to ')[1];
 		name = meow2(name);
 		if (name == "Bot Announcer") {
 			fChatLibInstance.sendMessage('/me giggles and wiggles her fat butt! "oohhh~~"', channel);
 		}
 	}
-	cmdHandler.rimjob = function (args, data) { cmdHandler.attack("tongue to ass "+args, data); }
-	cmdHandler.sexymoves = function (args, data) { cmdHandler.attack("body to sight "+args, data); }
-	cmdHandler.dance = function (args, data) { cmdHandler.attack("body to sight "+args, data); }
-	cmdHandler.giveanal = function (args, data) { cmdHandler.attack("sex to ass "+args, data); }
-	cmdHandler.receiveanal = function (args, data) { cmdHandler.attack("ass to sex "+args, data); }
+	cmdHandler.rimjob = function (args, data) { cmdHandler.attack("tongue to ass to "+args, data); }
+	cmdHandler.sexymoves = function (args, data) { cmdHandler.attack("body to sight to "+args, data); }
+	cmdHandler.dance = function (args, data) { cmdHandler.attack("body to sight to "+args, data); }
+	cmdHandler.giveanal = function (args, data) { cmdHandler.attack("sex to ass to "+args, data); }
+	cmdHandler.receiveanal = function (args, data) { cmdHandler.attack("ass to sex to "+args, data); }
 	cmdHandler.masturbate = function (args, data) { cmdHandler.attack("fingers to sex to me", data); }
 	cmdHandler.lick = function (args, data) { cmdHandler.attack("tongue to "+args, data); }
 	cmdHandler.grope = function (args, data) { cmdHandler.attack("fingers to "+args, data); }
 	cmdHandler.tease = function (args, data) { cmdHandler.attack("fingers to "+args, data); }
 	cmdHandler.suck = function (args, data) { cmdHandler.attack("mouth to "+args, data); }
-	cmdHandler.cuddle = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.cuddles = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.oral = function (args, data) { cmdHandler.attack("mouth to sex "+args, data); }
-	cmdHandler.blowjob = function (args, data) { cmdHandler.attack("mouth to sex "+args, data); }
-	cmdHandler.boop = function (args, data) { cmdHandler.attack("finger to nose "+args, data); }
-	cmdHandler.headpat = function (args, data) { cmdHandler.attack("pats to head "+args, data); }
-	cmdHandler.pet = function (args, data) { cmdHandler.attack("pats to head "+args, data); }
-	cmdHandler.pat = function (args, data) { cmdHandler.attack("pats to head "+args, data); }
-	cmdHandler.pets = function (args, data) { cmdHandler.attack("pats to head "+args, data); }
-	cmdHandler.pats = function (args, data) { cmdHandler.attack("pats to head "+args, data); }
-	cmdHandler.headrub = function (args, data) { cmdHandler.attack("rubs to head "+args, data); }
-	cmdHandler.earrub = function (args, data) { cmdHandler.attack("finger to ear "+args, data); }
-	cmdHandler.breed = function (args, data) { cmdHandler.attack("sex to sex "+args, data); }
-	cmdHandler.trib = function (args, data) { cmdHandler.attack("pussy to pussy "+args, data); }
-	cmdHandler.grind = function (args, data) { cmdHandler.attack("sex to sex "+args, data); }
-	cmdHandler.scissor = function (args, data) { cmdHandler.attack("pussy to pussy "+args, data); }
-	cmdHandler.swordfight = function (args, data) { cmdHandler.attack("cock to cock "+args, data); }
-	cmdHandler.thrust = function (args, data) { cmdHandler.attack("sex to sex "+args, data); }
-	cmdHandler.titfuck = function (args, data) { cmdHandler.attack("cock to tits "+args, data); }
-	cmdHandler.titjob = function (args, data) { cmdHandler.attack("tits to cock "+args, data); }
+	cmdHandler.cuddle = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.cuddles = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.oral = function (args, data) { cmdHandler.attack("mouth to sex to "+args, data); }
+	cmdHandler.blowjob = function (args, data) { cmdHandler.attack("mouth to sex to "+args, data); }
+	cmdHandler.boop = function (args, data) { cmdHandler.attack("finger to nose to "+args, data); }
+	cmdHandler.headpat = function (args, data) { cmdHandler.attack("pats to head to "+args, data); }
+	cmdHandler.pet = function (args, data) { cmdHandler.attack("pats to head to "+args, data); }
+	cmdHandler.pat = function (args, data) { cmdHandler.attack("pats to head to "+args, data); }
+	cmdHandler.pets = function (args, data) { cmdHandler.attack("pats to head to "+args, data); }
+	cmdHandler.pats = function (args, data) { cmdHandler.attack("pats to head to "+args, data); }
+	cmdHandler.headrub = function (args, data) { cmdHandler.attack("rubs to head to "+args, data); }
+	cmdHandler.earrub = function (args, data) { cmdHandler.attack("finger to ear to "+args, data); }
+	cmdHandler.breed = function (args, data) { cmdHandler.attack("sex to sex to "+args, data); }
+	cmdHandler.trib = function (args, data) { cmdHandler.attack("pussy to pussy to "+args, data); }
+	cmdHandler.grind = function (args, data) { cmdHandler.attack("sex to sex to "+args, data); }
+	cmdHandler.scissor = function (args, data) { cmdHandler.attack("pussy to pussy to "+args, data); }
+	cmdHandler.swordfight = function (args, data) { cmdHandler.attack("cock to cock to "+args, data); }
+	cmdHandler.thrust = function (args, data) { cmdHandler.attack("sex to sex to "+args, data); }
+	cmdHandler.titfuck = function (args, data) { cmdHandler.attack("cock to tits to "+args, data); }
+	cmdHandler.titjob = function (args, data) { cmdHandler.attack("tits to cock to "+args, data); }
 	cmdHandler.please = function (args, data) { cmdHandler.attack(args, data); }
 	cmdHandler.one = function (args, data) {
 		if (args.substring(0,23).toLowerCase() == "thousand years of death") {
@@ -1383,18 +1383,18 @@ module.exports = function (parent, chanName) {
 	cmdHandler.boobhat = function (args, data) { cmdHandler.attack("tits to head "+args, data); }
 	cmdHandler.motorboat = function (args, data) { cmdHandler.attack("mouth to tits "+args, data); }
 	cmdHandler.titfight = function (args, data) { cmdHandler.attack("tits to tits "+args, data); }
-	cmdHandler.succ = function (args, data) { cmdHandler.attack("mouth to sex "+args, data); }
+	cmdHandler.succ = function (args, data) { cmdHandler.attack("mouth to sex to "+args, data); }
 	cmdHandler.stare = function (args, data) { cmdHandler.attack("sight to sight "+args, data); }
 	cmdHandler.facefuck = function (args, data) { cmdHandler.attack("sex to mouth "+args, data); }
 	cmdHandler.toyfuck = function (args, data) { cmdHandler.attack("sextoy to sex "+args, data); }
 	cmdHandler.toyanal = function (args, data) { cmdHandler.attack("sextoy to ass "+args, data); }
-	cmdHandler.toyspank = function (args, data) { cmdHandler.attack("sextoy to butt "+args, data); }
+	cmdHandler.toyspank = function (args, data) { cmdHandler.attack("sextoy to butt to "+args, data); }
 	cmdHandler.wedgie = function (args, data) { cmdHandler.attack("pull to panties behind "+args, data); }
 	cmdHandler.nuzzle = function (args, data) { cmdHandler.attack("cheek to cheek "+args, data); }
 	cmdHandler.headbutt = function (args, data) { cmdHandler.attack("head to head "+args, data); }
-	cmdHandler.suplex = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.sniperspank = function (args, data) { cmdHandler.attack("hand to butt "+args, data); }
-	cmdHandler.assfuck = function (args, data) { cmdHandler.attack("sex to ass "+args, data); }
+	cmdHandler.suplex = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.sniperspank = function (args, data) { cmdHandler.attack("hand to butt to "+args, data); }
+	cmdHandler.assfuck = function (args, data) { cmdHandler.attack("sex to ass to "+args, data); }
 	cmdHandler.handjob = function (args, data) { cmdHandler.attack("hands to cock "+args, data); }
 	cmdHandler.footjob = function (args, data) { cmdHandler.attack("feet to cock "+args, data); }
 	cmdHandler.hotdog = function (args, data) { cmdHandler.attack("cock to ass "+args, data); }
@@ -1409,19 +1409,19 @@ module.exports = function (parent, chanName) {
 	cmdHandler.smother = function (args, data) { cmdHandler.attack("tits to face "+args, data); }
 	cmdHandler.highfive = function (args, data) { cmdHandler.attack("hand to hand "+args, data); }
 	cmdHandler.handholding = function (args, data) { cmdHandler.attack("hand to hand "+args, data); }
-	cmdHandler.hug = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.hugs = function (args, data) { cmdHandler.attack("body to body "+args, data); }
+	cmdHandler.hug = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.hugs = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
 	
 	cmdHandler.tailjob = function (args, data) { cmdHandler.attack("tail to sex "+args, data); }
 	cmdHandler.tailwhip = function (args, data) { cmdHandler.attack("tail to butt "+args, data); }
-	cmdHandler.powerbottom = function (args, data) { cmdHandler.attack("ass to sex "+args, data); }
-	cmdHandler.analride = function (args, data) { cmdHandler.attack("ass to sex "+args, data); }
-	cmdHandler.assmilking = function (args, data) { cmdHandler.attack("ass to sex "+args, data); }
-	cmdHandler.analrodeo = function (args, data) { cmdHandler.attack("ass to sex "+args, data); }
-	cmdHandler.pimpslap = function (args, data) { cmdHandler.attack("dick to face "+args, data); }
-	cmdHandler.dickslap = function (args, data) { cmdHandler.attack("dick to face "+args, data); }
-	cmdHandler.tacklehug = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.glomp = function (args, data) { cmdHandler.attack("body to body "+args, data); }
+	cmdHandler.powerbottom = function (args, data) { cmdHandler.attack("ass to sex to "+args, data); }
+	cmdHandler.analride = function (args, data) { cmdHandler.attack("ass to sex to "+args, data); }
+	cmdHandler.assmilking = function (args, data) { cmdHandler.attack("ass to sex to "+args, data); }
+	cmdHandler.analrodeo = function (args, data) { cmdHandler.attack("ass to sex to "+args, data); }
+	cmdHandler.pimpslap = function (args, data) { cmdHandler.attack("dick to face to "+args, data); }
+	cmdHandler.dickslap = function (args, data) { cmdHandler.attack("dick to face to "+args, data); }
+	cmdHandler.tacklehug = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.glomp = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
 	cmdHandler.tailprobe = function (args, data) { cmdHandler.attack("tail to prostate "+args, data); }
 	cmdHandler.deepthroat = function (args, data) { cmdHandler.attack("throat to cock "+args, data); }
 	cmdHandler.tainal = function (args, data) { cmdHandler.attack("tail to ass "+args, data); }
@@ -1441,11 +1441,11 @@ module.exports = function (parent, chanName) {
 	cmdHandler.ballhat = function (args, data) { cmdHandler.attack("balls to head "+args, data); }
 	cmdHandler.facesit = function (args, data) { cmdHandler.attack("ass to face "+args, data); }
 	//cmdHandler.supercuddles = function (args, data) { Combate.forceCrit(); cmdHandler.attack("cuddles to body "+args, data); }
-	cmdHandler.fellatio = function (args, data) { cmdHandler.attack("mouth to sex "+args, data); }
+	cmdHandler.fellatio = function (args, data) { cmdHandler.attack("mouth to sex to "+args, data); }
 	cmdHandler.asshat = function (args, data) { cmdHandler.attack("ass to head "+args, data); }
 	
-	cmdHandler.snuggle = function (args, data) { cmdHandler.attack("body to body "+args, data); }
-	cmdHandler.snuggles = function (args, data) { cmdHandler.attack("body to body "+args, data); }
+	cmdHandler.snuggle = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
+	cmdHandler.snuggles = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
 	
 	cmdHandler.fingerblast = function (args, data) { cmdHandler.attack("fingers to pussy "+args, data); }
 	cmdHandler.fingerblass = function (args, data) { cmdHandler.attack("fingers to ass "+args, data); }
@@ -1457,7 +1457,7 @@ module.exports = function (parent, chanName) {
 	cmdHandler.justice = function (args, data) { cmdHandler.attack("I have to no idea "+args, data); }
 	
 	cmdHandler.tacobell = function (args, data) { cmdHandler.attack("eat to pussy "+args, data); }
-	cmdHandler.slam = function (args, data) { cmdHandler.attack("body to body "+args, data); }
+	cmdHandler.slam = function (args, data) { cmdHandler.attack("body to body to "+args, data); }
 	
 	cmdHandler.chanclazo = function (args, data) { cmdHandler.attack("chancla to butt "+args, data); }
 	cmdHandler.spit = function (args, data) { cmdHandler.attack("saliva to mouth "+args, data); }
@@ -2056,6 +2056,7 @@ module.exports = function (parent, chanName) {
 			}
 			let pj = new Personaje(chara);
 			client.hgetall("Bot Announcer", function (err, dummy) {
+				if (dummy == null) { fChatLibInstance.sendPrivMessage(data.character, "The training dummy hasn't been set up yet."); return 0; }
 				let dmy = new Personaje(dummy);
 				gyms[data.character] = new combate();
 				gyms[data.character].addActor2(pj,hp);
@@ -2093,6 +2094,7 @@ module.exports = function (parent, chanName) {
 			}
 			let pj = new Personaje(chara);
 			client.hgetall("Milly The Succubot", function (err, dummy) {
+				if (dummy == null) { fChatLibInstance.sendPrivMessage(data.character, "The training dummy hasn't been set up yet."); return 0; }
 				let dmy = new Personaje(dummy);
 				gyms[data.character] = new combate();
 				gyms[data.character].addActor2(pj,hp);
@@ -2130,6 +2132,9 @@ module.exports = function (parent, chanName) {
 			}
 			let pj = new Personaje(chara);
 			client.hgetall("Yuni Hermit", function (err, dummy) {
+				if (dummy == null) {
+					fChatLibInstance.sendPrivMessage(data.character, "The training dummy hasn't been set up yet. An admin needs to register 'Yuni Hermit' in the database first."); return 0;
+				}
 				//hay que guardar los datos de pj
 				client.hmset(data.character, pj.getSaveFile());
 				//puedes pelear
@@ -2166,6 +2171,7 @@ module.exports = function (parent, chanName) {
 			}
 			let pj = new Personaje(chara);
 			client.hgetall("Sissy Robert Bot", function (err, dummy) {
+				if (dummy == null) { fChatLibInstance.sendPrivMessage(data.character, "The training dummy hasn't been set up yet."); return 0; }
 				//hay que guardar los datos de pj
 				client.hmset(data.character, pj.getSaveFile());
 				//puedes pelear
@@ -2202,6 +2208,7 @@ module.exports = function (parent, chanName) {
 			}
 			let pj = new Personaje(chara);
 			client.hgetall("Boxing Emily Bot", function (err, dummy) {
+				if (dummy == null) { fChatLibInstance.sendPrivMessage(data.character, "The training dummy hasn't been set up yet."); return 0; }
 				let dmy = new Personaje(dummy);
 				gyms[data.character] = new combate();
 				gyms[data.character].addActor2(pj,hp);
