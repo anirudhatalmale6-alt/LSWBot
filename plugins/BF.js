@@ -1836,8 +1836,8 @@ module.exports = function (parent, chanName) {
 
 	cmdHandler.setheight = function (args, data) {
 		let height = parseInt(args);
-		if (isNaN(height) || height < 50 || height > 500) {
-			let message = "Set your character's height in cm. Usage: !setheight 170 (valid range: 50-500cm)";
+		if (isNaN(height) || height < 50 || height > 610) {
+			let message = "Set your character's height in cm. Usage: !setheight 170 (valid range: 50-610cm)";
 			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
 			return 0;
 		}
