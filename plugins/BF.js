@@ -143,9 +143,13 @@ module.exports = function (parent, chanName) {
 
 	cmdHandler.addshopitem = function (args, data) {
 		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
-		var match = args.match(/^(\w+)\s+"([^"]+)"\s+(\d+)\s+(.+)$/);
+		var cleaned = args.replace(/[“”„‟″‶＂]/g, '"').replace(/[‘’‚‛′‵＇]/g, "'");
+		var match = cleaned.match(/^(\w+)\s+["']([^"']+)["']\s+(\d+)\s+(.+)$/);
 		if (!match) {
-			fChatLibInstance.sendPrivMessage(data.character, 'Usage: !addshopitem shopname "Item Name" price stat1 +/-value [stat2 +/-value ...]\nShops: outfits, sextoys, accessories, handicaps, consumables, endgame\nStats: atklips, atkfingers, atktits, atksex, atkass, atkfeet, deflips, deffingers, deftits, defsex, defass, deffeet\nExample: !addshopitem accessories "Boxing Gloves" 100 atkfingers +2 deffingers +1');
+			match = cleaned.match(/^(\w+)\s+(\S+)\s+(\d+)\s+(.+)$/);
+		}
+		if (!match) {
+			fChatLibInstance.sendPrivMessage(data.character, 'Usage: !addshopitem shopname "Item Name" price stat1 +/-value [stat2 +/-value ...]\nFor multi-word names, use quotes. For single-word names, quotes are optional.\nShops: outfits, sextoys, accessories, handicaps, consumables, endgame\nStats: atklips, atkfingers, atktits, atksex, atkass, atkfeet, deflips, deffingers, deftits, defsex, defass, deffeet\nExample: !addshopitem accessories "Boxing Gloves" 100 atkfingers +2 deffingers +1');
 			return 0;
 		}
 		var shopName = match[1].toLowerCase();
