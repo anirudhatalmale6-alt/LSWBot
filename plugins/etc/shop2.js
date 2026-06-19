@@ -93,10 +93,6 @@ items.push({id: 319,	name: "Crotchless panties",	slot: "flavor",		Gold: 10,	defs
 items.push({id: 320,	name: "Buttless panties",	slot: "flavor",		Gold: 10,	defsex: 3, defass: -3, flavor: "Uhm... what are you looking at?"		});
 items.push({id: 321,	name: "Sensitivity enhancing cream for feet or paws",	slot: "flavor",		Gold: 3,	deffeet: -3		});
 items.push({id: 322,	name: "Huge sensitive cock",	slot: "flavor",		Gold: 3,	atksex: 3, defsex: -3		});
-items.push({id: 323,	name: "Tarah's slutty ass",	slot: "flavor",		Gold: 5,	defass: -10		});
-items.push({id: 325,	name: "Shinju's intimate piercing",	slot: "flavor",		Gold: 5,	defsex: -10		});
-items.push({id: 326,	name: "Hiroki's Sex Drive",	slot: "flavor",		Gold: 5,	defass: -11, defsex: -6		});
-items.push({id: 324,	name: "Arm binders",		slot: "flavor",		Gold: 10,	atkfingers: -10, deftits: -3, deflips: -3, defsex: -1, defass: -1		});
 
 //items.push({id: 319,	name: "Mecha horde mask",	slot: "flavor",		Gold: 4,	defsex: -1, deftits: -1, defass: -1, deflips: -1, atklips: 4, flavor: "Keeps user's mouth open but makes them more sensitive~"		});
 
