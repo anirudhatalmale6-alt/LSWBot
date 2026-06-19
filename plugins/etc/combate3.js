@@ -33,6 +33,7 @@ function Combate() {
 	this.teamturn = ["red","blue"];
 	this.letras = ["A","B","C","D"];
 	this.even = false;
+	this.pins = {};
 	
 	this.debug = function() {
 		console.log("Actores: "+this.actores);
@@ -73,7 +74,63 @@ function Combate() {
 	this.toggleCrits = function() {
 		if (this.crits) { this.crits = false; return "Crits disabled!"; } else { this.crits = true; return "Crits enabled!"; }
 	}
-	
+
+	this.pin = function(pinnerName) {
+		if (this.started == false) { return "Combat hasn't started yet."; }
+		if (this.teamsf) { return "Pin is not available in team fights."; }
+		if (!this.activeActor(pinnerName)) { return "It's not your turn."; }
+		var pinner = this.actores[0];
+		var target = this.actores[1];
+		if (this.pins[target.name] == pinnerName) { return "You already have them pinned!"; }
+		if (this.pins[pinner.name] == target.name) { return "You can't pin someone while you're pinned! Use !escape first."; }
+		var chance = 50;
+		var pinnerHeight = pinner.height || 170;
+		var targetHeight = target.height || 170;
+		var heightDiff = pinnerHeight - targetHeight;
+		chance += Math.floor(heightDiff / 5);
+		if (chance < 10) { chance = 10; }
+		if (chance > 90) { chance = 90; }
+		var roll = Math.ceil(Math.random() * 100);
+		var message = "";
+		if (roll <= chance) {
+			this.pins[target.name] = pinnerName;
+			message = "\n" + icon + " [color=yellow][b]" + pinner.stageName + "[/b] attempts to pin [b]" + target.stageName + "[/b]... SUCCESS! " + target.stageName + " is pinned down! (+4 attack for " + pinner.stageName + ", -4 attack for " + target.stageName + ")[/color]";
+		} else {
+			message = "\n" + icon + " [color=gray][b]" + pinner.stageName + "[/b] attempts to pin [b]" + target.stageName + "[/b]... but " + target.stageName + " slips free![/color]";
+		}
+		this.nextActor();
+		message += this.status();
+		return message;
+	}
+
+	this.escape = function(escaperName) {
+		if (this.started == false) { return "Combat hasn't started yet."; }
+		if (this.teamsf) { return "Pin is not available in team fights."; }
+		if (!this.activeActor(escaperName)) { return "It's not your turn."; }
+		var escaper = this.actores[0];
+		if (this.pins[escaper.name] == undefined) { return "You're not pinned!"; }
+		var chance = 50;
+		var escaperHeight = escaper.height || 170;
+		var pinnerName = this.pins[escaper.name];
+		var pinner = this.actores[1];
+		var pinnerHeight = pinner.height || 170;
+		var heightDiff = escaperHeight - pinnerHeight;
+		chance += Math.floor(heightDiff / 5);
+		if (chance < 10) { chance = 10; }
+		if (chance > 90) { chance = 90; }
+		var roll = Math.ceil(Math.random() * 100);
+		var message = "";
+		if (roll <= chance) {
+			delete this.pins[escaper.name];
+			message = "\n" + icon + " [color=green][b]" + escaper.stageName + "[/b] struggles and breaks free from the pin![/color]";
+		} else {
+			message = "\n" + icon + " [color=red][b]" + escaper.stageName + "[/b] tries to escape the pin... but can't break free![/color]";
+		}
+		this.nextActor();
+		message += this.status();
+		return message;
+	}
+
 	this.giveOdds = function() {
 		let sp0 = this.actores[0].usedstatpoints == 0 ? 1 : this.actores[0].usedstatpoints;
 		let sp1 = this.actores[1].usedstatpoints == 0 ? 1 : this.actores[1].usedstatpoints;
@@ -273,6 +330,8 @@ function Combate() {
 				damage -= Math.min(Math.floor(atacante.closes/3),3);
 				console.log("lose streak bonus");
 			}
+			if (this.pins[defensor.name] == atacante.name) { damage += 4; console.log("pin attacker bonus"); }
+			if (this.pins[atacante.name] == defensor.name) { damage -= 4; console.log("pin defender penalty"); }
 			if (damage <= 0) { damage = 1; }
 			
 			if (score !== undefined) { if (!isNaN(score)) { damage += Math.floor(score/20); console.log("Score in combat: "+Math.floor(score/20)); } }
@@ -478,8 +537,12 @@ function Combate() {
 				hoja += " " + hpBarL(this.actores[0].HP,this.actores[0].maxHP) + " ⭐ [color=purple]VS[/color] ⭐ " +  hpBarR(this.actores[1].HP,this.actores[1].maxHP) + "\n";
 				hoja += "► [icon]" + this.actores[0].name + "[/icon]                                                                  [icon]" + this.actores[1].name + "[/icon]\n";
 				
+				var pinStatus = "";
+				if (this.pins[this.actores[0].name]) { pinStatus += "[color=red]" + this.actores[0].stageName + " is PINNED![/color] "; }
+				if (this.pins[this.actores[1].name]) { pinStatus += "[color=red]" + this.actores[1].stageName + " is PINNED![/color] "; }
+				if (pinStatus != "") { hoja += pinStatus + "\n"; }
 				hoja += "It's " + this.actores[0].stageName + "'s turn![/color]\n";
-				
+
 			} else {
 				if (this.actores.length > 0) {
 					hoja += "[color=cyan]════════════════ ⭐ [color=purple]"+this.mode[5]+" ring[/color] ⭐ ════════════════\n";
@@ -537,6 +600,7 @@ function Combate() {
 		this.intervention = false;
 		this.crits = true;
 		this.even = false;
+		this.pins = {};
 	}
 	
 	function diceroll(crits) { console.log("crits: "+crits); console.log("crit: "+crit);

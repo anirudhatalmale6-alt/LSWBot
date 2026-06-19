@@ -23,6 +23,7 @@ function Personaje (newChara) {
 	if (newChara.faction !== undefined) { this.faction = newChara.faction; } else { this.faction = "None yet!"; }
 	
 	this.looking = (newChara.looking == undefined ? "no" : newChara.looking);
+	this.height = parseInt(newChara.height) || 170;
 	
 	this.domsub = (newChara.domsub === undefined ? "switch" : newChara.domsub);
 	this.cwins = readStat(newChara.cwins);
@@ -248,6 +249,13 @@ function Personaje (newChara) {
 	this.giveItem = function(item) {
 		this.equipment.push(item);
 	}
+
+	this.giveCustomItem = function(item) {
+		this.equipment.push(item);
+		let itemDef = JSON.stringify(item);
+		if (this.custom == "") { this.custom = itemDef; }
+		else { this.custom += "#meow#" + itemDef; }
+	}
 	
 	//this.setstat = function(stat, value) {
 		//this[stat] = value;
@@ -462,7 +470,8 @@ function Personaje (newChara) {
 		newChara.custom = this.custom;
 		newChara.loadouts = this.loadouts;
 		newChara.domsub = this.domsub;
-		
+		newChara.height = this.height;
+
 		newChara.addlips = this.addlips; newChara.addfingers = this.addfingers; newChara.addtits = this.addtits;
 		newChara.addsex = this.addsex; newChara.addass = this.addass; newChara.addfeet = this.addfeet; 
 		newChara.addsight = this.addsight; newChara.addbody = this.addbody;
@@ -555,6 +564,9 @@ function buscaId(nombre, customObjectArray) {
 			}
 			return lista[i];
         }
+    }
+    for (let j = 0; j < customObjectArray.length; j++) {
+        if (customObjectArray[j].id == nombre) { return customObjectArray[j]; }
     }
     return -1;
 }

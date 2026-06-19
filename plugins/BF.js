@@ -23,6 +23,7 @@ var gyms = {};
 var scores = {};
 var client = redisHelper.createRedisClient(0);
 var clientOld = redisHelper.createRedisClient(1);
+var customShopItems = [];
 var totalXP = [0,100,500,1200,2200,3500,5000,6700,8500,10500,12600,14900,17300,19800,22500,25300,28200,31200,34300,37500,40800,44200,47700,51300,55000,58800,62600,66500,70500,74600,78800,83000,87300,91700,96200,100700,105300,110000,114700,119500,124400,129300,134300,139400,144500,149700,155000,160300,165700,171100,176600,182200,187800,193500,199200,205000,210800,216700,222700,228700,234800,240900,247100,253300,259600,265900,272300,278700,285200,291700,298300,304900,311600,318300,325100,331900,338800,345700,352700,359700,366800,373900,381100,388300,395500,402800,410100,417500,424900,432400,439900,447500,455100,462700,470400,478100,485900,493700,501600,509500,517400,525400,533400,541500,549600,557700,565900,574100,582400,590700,599000,607400,615800,624300,632800,641300,649900,658500,667100,675800,684500,693300,702100,710900,719800,728700,737600,746600,755600,764700,773800,782900,792100,801300,810500,819800,829100,838400,847800,857200,866600,876100,885600,895200,904800,914400,924100,933800,943500,953300,963100,972900,982800,992700,1002600,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999];
 var level = [1,4,7,10,13,15,17,18,20,21,23,24,25,27,28,29,30,31,32,33,34,35,36,37,38,38,39,40,41,42,42,43,44,45,45,46,47,47,48,49,49,50,51,51,52,53,53,54,54,55,56,56,57,57,58,58,59,60,60,61,61,62,62,63,63,64,64,65,65,66,66,67,67,68,68,69,69,70,70,71,71,72,72,72,73,73,74,74,75,75,76,76,76,77,77,78,78,79,79,79,80,80,81,81,81,82,82,83,83,83,84,84,85,85,85,86,86,86,87,87,88,88,88,89,89,89,90,90,91,91,91,92,92,92,93,93,93,94,94,94,95,95,96,96,96,97,97,97,98,98,98,99,99,99,100,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999];
 var xpForNext = [8,25,12,131,544,596,832,159,761,148,1224,725,276,2152,1889,1700,1591,1568,1637,1804,2075,2456,2953,3572,4319,519,1400,2421,3588,4907,707,2184,3825,5636,1136,3123,5292,592,2949,5500,600,3351,6308,1208,4377,7764,2464,6075,675,4516,8593,2993,7312,1612,6179,379,5200,10281,4281,9628,3528,9147,2947,8844,2544,8725,2325,8796,2296,9063,2463,9532,2832,10209,3409,11100,4200,12211,5211,13548,6448,15117,7917,717,9724,2424,11775,4375,14076,6576,16633,9033,1433,11852,4152,14939,7139,18300,10400,2500,14041,6041,17968,9868,1768,14087,5887,18604,10304,2004,15125,6725,20256,11756,3256,17203,8603,3,14372,5672,20469,11669,2869,18100,9200,300,15971,6971,23088,13988,4888,21457,12257,3057,20084,10784,1484,18975,9575,175,18136,8636,27073,17473,7873,26792,17092,7392,26799,16999,7199,27100,17200,7300,27701,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -40,7 +41,11 @@ module.exports = function (parent, chanName) {
 	
 	client.on("error", function (err) { console.log("Redis error " + err); });
 	clientOld.on("error", function (err) { console.log("Redis error " + err); });
-	
+
+	client.get("customshopitems", function (err, data) {
+		if (data) { try { customShopItems = JSON.parse(data); } catch(e) { customShopItems = []; } }
+	});
+
 	cmdHandler.help = function (args, data) {
 		fChatLibInstance.sendPrivMessage(data.character, generar_ayuda());
 	}
@@ -135,7 +140,91 @@ module.exports = function (parent, chanName) {
 		}
 		fChatLibInstance.sendPrivMessage(data.character, message);
 	}
-	
+
+	cmdHandler.addshopitem = function (args, data) {
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		var match = args.match(/^(\w+)\s+"([^"]+)"\s+(\d+)\s+(.+)$/);
+		if (!match) {
+			fChatLibInstance.sendPrivMessage(data.character, 'Usage: !addshopitem shopname "Item Name" price stat1 +/-value [stat2 +/-value ...]\nShops: outfits, sextoys, accessories, handicaps, consumables, endgame\nStats: atklips, atkfingers, atktits, atksex, atkass, atkfeet, deflips, deffingers, deftits, defsex, defass, deffeet\nExample: !addshopitem accessories "Boxing Gloves" 100 atkfingers +2 deffingers +1');
+			return 0;
+		}
+		var shopName = match[1].toLowerCase();
+		var itemName = match[2];
+		var price = parseInt(match[3]);
+		var statsStr = match[4].trim();
+		var shopRanges = { outfits: [0, 99, "armor"], sextoys: [100, 199, "weapon"], accessories: [200, 299, "item"], handicaps: [300, 399, "flavor"], consumables: [500, 599, "consumable"], endgame: [700, 799, "endgame"] };
+		if (!shopRanges[shopName]) {
+			fChatLibInstance.sendPrivMessage(data.character, "Unknown shop. Options: outfits, sextoys, accessories, handicaps, consumables, endgame");
+			return 0;
+		}
+		var range = shopRanges[shopName];
+		var maxId = range[0];
+		for (var i = 0; i < customShopItems.length; i++) {
+			if (customShopItems[i].id >= range[0] && customShopItems[i].id <= range[1] && customShopItems[i].id > maxId) {
+				maxId = customShopItems[i].id;
+			}
+		}
+		var items = requireNew('./etc/shop2.js');
+		for (var i = 0; i < items.length; i++) {
+			if (items[i].id >= range[0] && items[i].id <= range[1] && items[i].id > maxId) {
+				maxId = items[i].id;
+			}
+		}
+		var newId = maxId + 1;
+		if (newId > range[1]) {
+			fChatLibInstance.sendPrivMessage(data.character, "Shop is full! No more IDs available in the " + shopName + " range.");
+			return 0;
+		}
+		var newItem = { id: newId, name: itemName, slot: range[2], Gold: price };
+		var statPairs = statsStr.match(/(\w+)\s+([+-]?\d+)/g);
+		if (statPairs) {
+			for (var i = 0; i < statPairs.length; i++) {
+				var parts = statPairs[i].match(/(\w+)\s+([+-]?\d+)/);
+				if (parts) { newItem[parts[1]] = parseInt(parts[2]); }
+			}
+		}
+		customShopItems.push(newItem);
+		client.set("customshopitems", JSON.stringify(customShopItems));
+		var statDesc = "";
+		var keys = Object.keys(newItem);
+		for (var i = 0; i < keys.length; i++) {
+			if (keys[i] != "id" && keys[i] != "name" && keys[i] != "slot" && keys[i] != "Gold") {
+				statDesc += keys[i] + " " + signo(newItem[keys[i]]) + ", ";
+			}
+		}
+		if (statDesc.length > 2) { statDesc = statDesc.substring(0, statDesc.length - 2); }
+		fChatLibInstance.sendPrivMessage(data.character, "Added item #" + newId + ": " + itemName + " ($" + price + ") to " + shopName + ". Stats: " + (statDesc || "none"));
+	}
+
+	cmdHandler.removeshopitem = function (args, data) {
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		var found = -1;
+		for (var i = 0; i < customShopItems.length; i++) {
+			if (customShopItems[i].name.toLowerCase() == args.toLowerCase()) { found = i; break; }
+		}
+		if (found == -1) {
+			fChatLibInstance.sendPrivMessage(data.character, "Custom item '" + args + "' not found. Only admin-added items can be removed.");
+			return 0;
+		}
+		var removed = customShopItems.splice(found, 1)[0];
+		client.set("customshopitems", JSON.stringify(customShopItems));
+		fChatLibInstance.sendPrivMessage(data.character, "Removed custom item: " + removed.name + " (ID #" + removed.id + ")");
+	}
+
+	cmdHandler.listshopitems = function (args, data) {
+		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (customShopItems.length == 0) {
+			fChatLibInstance.sendPrivMessage(data.character, "No custom shop items.");
+			return 0;
+		}
+		var message = "Custom shop items:\n";
+		for (var i = 0; i < customShopItems.length; i++) {
+			var item = customShopItems[i];
+			message += "#" + item.id + " - " + item.name + " ($" + item.Gold + ") [" + item.slot + "]\n";
+		}
+		fChatLibInstance.sendPrivMessage(data.character, message);
+	}
+
 	cmdHandler.catpower = function (args, data) {
 		let catpowers = ["Kiara Simons","Angel Lucian"];
 		if (catpowers.indexOf(data.character) == -1) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
@@ -376,6 +465,11 @@ module.exports = function (parent, chanName) {
 	cmdHandler.buy = function (args, data) {
 		let items = requireNew('./etc/shop2.js');
 		let itemAsked = busca(items, args);
+		let isCustom = false;
+		if (itemAsked == -1) {
+			itemAsked = busca(customShopItems, args);
+			if (itemAsked != -1) { isCustom = true; }
+		}
 		if (itemAsked == -1) {
 			let message = "The item '" + args + "' wasn't found.";
 			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
@@ -392,7 +486,7 @@ module.exports = function (parent, chanName) {
 			let message = "You can't afford that item, you currently have $" + pj.Gold + ".00";
 			if (pj.Gold >= costo) {
 				pj.addGold(costo * -1);
-				pj.giveItem(itemAsked);
+				if (isCustom) { pj.giveCustomItem(itemAsked); } else { pj.giveItem(itemAsked); }
 				client.hmset(data.character, pj.getSaveFile());
 				message = "The item " + args + " has been added to your item list. You now have $" + pj.Gold + ".00 left.";
 			}
@@ -1720,6 +1814,49 @@ module.exports = function (parent, chanName) {
 		}
 	}
 	
+	cmdHandler.pin = function (args, data) {
+		if (data.publico) {
+			let message = Combate.pin(data.character);
+			fChatLibInstance.sendMessage(message, channel);
+			if (Combate.started == false) { Combate.reset(); }
+		} else {
+			fChatLibInstance.sendPrivMessage(data.character, "Pin only works in the public room during a fight.");
+		}
+	}
+
+	cmdHandler.escape = function (args, data) {
+		if (data.publico) {
+			let message = Combate.escape(data.character);
+			fChatLibInstance.sendMessage(message, channel);
+			if (Combate.started == false) { Combate.reset(); }
+		} else {
+			fChatLibInstance.sendPrivMessage(data.character, "Escape only works in the public room during a fight.");
+		}
+	}
+
+	cmdHandler.setheight = function (args, data) {
+		let height = parseInt(args);
+		if (isNaN(height) || height < 50 || height > 500) {
+			let message = "Set your character's height in cm. Usage: !setheight 170 (valid range: 50-500cm)";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+			return 0;
+		}
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered, use !register to join the club.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let pj = new Personaje(chara);
+			pj.setStat("height", height);
+			client.hmset(pj.name, pj.getSaveFile());
+			let feet = Math.floor(height / 30.48);
+			let inches = Math.round((height / 2.54) % 12);
+			let message = pj.stageName + "'s height set to " + height + "cm (" + feet + "'" + inches + "\"). This affects pin success rates!";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+
 	cmdHandler.surrender = function (args, data) { cmdHandler.giveup(args, data); }
 	cmdHandler.cum = function (args, data) { cmdHandler.giveup(args, data); }
 	cmdHandler.tapout = function (args, data) { cmdHandler.giveup(args, data); }
@@ -2287,6 +2424,9 @@ module.exports = function (parent, chanName) {
 			for (let i = 0; i < items.length; i++) {
 				hoja += entrada(items, i, 301, 399);
 			}
+			for (let i = 0; i < customShopItems.length; i++) {
+				hoja += entrada(customShopItems, i, 301, 399);
+			}
 			hoja += "[/color][/color]";
 			data.publico ? fChatLibInstance.sendMessage(hoja, channel) : fChatLibInstance.sendPrivMessage(data.character, hoja);
 		} else {
@@ -2619,6 +2759,7 @@ function generar_tienda(lista, minId, maxId, store, emoji) {
 	hoja +="══════════════════════════════════════════════════\n[color=pink]";
 	let items = requireNew('./etc/shop2.js');
 	for (let i = 0; i < items.length; i++) { hoja += entrada(lista, i, minId, maxId); }
+	for (let i = 0; i < customShopItems.length; i++) { hoja += entrada(customShopItems, i, minId, maxId); }
 	hoja += "[/color][/color]";
 	return hoja;
 }
