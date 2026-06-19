@@ -156,26 +156,25 @@ module.exports = function (parent, chanName) {
 		var itemName = match[2];
 		var price = parseInt(match[3]);
 		var statsStr = match[4].trim();
-		var shopRanges = { outfits: [0, 99, "armor"], sextoys: [100, 199, "weapon"], accessories: [200, 299, "item"], handicaps: [300, 399, "flavor"], consumables: [500, 599, "consumable"], endgame: [700, 799, "endgame"] };
+		var shopRanges = { outfits: [0, 99, "armor"], sextoys: [100, 199, "weapon"], accessories: [200, 299, "item"], handicaps: [300, 399, "flavor"], consumables: [500, 599, "consumable"], endgame: [700, 799, "weapon"] };
 		if (!shopRanges[shopName]) {
 			fChatLibInstance.sendPrivMessage(data.character, "Unknown shop. Options: outfits, sextoys, accessories, handicaps, consumables, endgame");
 			return 0;
 		}
 		var range = shopRanges[shopName];
-		var maxId = range[0];
-		for (var i = 0; i < customShopItems.length; i++) {
-			if (customShopItems[i].id >= range[0] && customShopItems[i].id <= range[1] && customShopItems[i].id > maxId) {
-				maxId = customShopItems[i].id;
-			}
-		}
+		var usedIds = {};
 		var items = requireNew('./etc/shop2.js');
 		for (var i = 0; i < items.length; i++) {
-			if (items[i].id >= range[0] && items[i].id <= range[1] && items[i].id > maxId) {
-				maxId = items[i].id;
-			}
+			if (items[i].id >= range[0] && items[i].id <= range[1]) { usedIds[items[i].id] = true; }
 		}
-		var newId = maxId + 1;
-		if (newId > range[1]) {
+		for (var i = 0; i < customShopItems.length; i++) {
+			if (customShopItems[i].id >= range[0] && customShopItems[i].id <= range[1]) { usedIds[customShopItems[i].id] = true; }
+		}
+		var newId = -1;
+		for (var i = range[0]; i <= range[1]; i++) {
+			if (!usedIds[i]) { newId = i; break; }
+		}
+		if (newId == -1) {
 			fChatLibInstance.sendPrivMessage(data.character, "Shop is full! No more IDs available in the " + shopName + " range.");
 			return 0;
 		}
