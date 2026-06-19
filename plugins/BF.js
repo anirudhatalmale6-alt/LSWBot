@@ -143,20 +143,26 @@ module.exports = function (parent, chanName) {
 
 	cmdHandler.addshopitem = function (args, data) {
 		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
-		var cleaned = args.replace(/[“”„‟″‶＂]/g, '"').replace(/[‘’‚‛′‵＇]/g, "'");
-		var match = cleaned.match(/^(\w+)\s+["']([^"']+)["']\s+(\d+)\s+(.+)$/);
+		var cleaned = args.replace(/[\u201c\u201d\u201e\u201f\u2033\u2036\uff02]/g, '"').replace(/[\u2018\u2019\u201a\u201b\u2032\u2035\uff07]/g, "'");
+		var match = cleaned.match(/^(\w+)\s+(\w+)\s+["']([^"']+)["']\s+(\d+)\s+(.+)$/);
 		if (!match) {
-			match = cleaned.match(/^(\w+)\s+(\S+)\s+(\d+)\s+(.+)$/);
+			match = cleaned.match(/^(\w+)\s+(\w+)\s+(\S+)\s+(\d+)\s+(.+)$/);
 		}
 		if (!match) {
-			fChatLibInstance.sendPrivMessage(data.character, 'Usage: !addshopitem shopname "Item Name" price stat1 +/-value [stat2 +/-value ...]\nFor multi-word names, use quotes. For single-word names, quotes are optional.\nShops: outfits, sextoys, accessories, handicaps, consumables, endgame\nStats: atklips, atkfingers, atktits, atksex, atkass, atkfeet, deflips, deffingers, deftits, defsex, defass, deffeet\nExample: !addshopitem accessories "Boxing Gloves" 100 atkfingers +2 deffingers +1');
+			fChatLibInstance.sendPrivMessage(data.character, 'Usage: !addshopitem shopname slottype "Item Name" price stat1 +/-value [stat2 +/-value ...]\nShops: outfits, sextoys, accessories, handicaps, consumables, endgame\nSlot types: armor, weapon, item, flavor\nStats: atklips, atkfingers, atktits, atksex, atkass, atkfeet, deflips, deffingers, deftits, defsex, defass, deffeet\nExample: !addshopitem endgame armor "OP Outfit" 9999 deftits +20 defsex +20');
 			return 0;
 		}
 		var shopName = match[1].toLowerCase();
-		var itemName = match[2];
-		var price = parseInt(match[3]);
-		var statsStr = match[4].trim();
-		var shopRanges = { outfits: [0, 99, "armor"], sextoys: [100, 199, "weapon"], accessories: [200, 299, "item"], handicaps: [300, 399, "flavor"], consumables: [500, 599, "consumable"], endgame: [700, 799, "weapon"] };
+		var slotType = match[2].toLowerCase();
+		var itemName = match[3];
+		var price = parseInt(match[4]);
+		var statsStr = match[5].trim();
+		var validSlots = ["armor", "weapon", "item", "flavor"];
+		if (validSlots.indexOf(slotType) == -1) {
+			fChatLibInstance.sendPrivMessage(data.character, "Unknown slot type '" + slotType + "'. Options: armor (outfits), weapon (sextoys), item (accessories), flavor (handicaps)");
+			return 0;
+		}
+		var shopRanges = { outfits: [0, 99], sextoys: [100, 199], accessories: [200, 299], handicaps: [300, 399], consumables: [500, 599], endgame: [700, 799] };
 		if (!shopRanges[shopName]) {
 			fChatLibInstance.sendPrivMessage(data.character, "Unknown shop. Options: outfits, sextoys, accessories, handicaps, consumables, endgame");
 			return 0;
@@ -178,7 +184,7 @@ module.exports = function (parent, chanName) {
 			fChatLibInstance.sendPrivMessage(data.character, "Shop is full! No more IDs available in the " + shopName + " range.");
 			return 0;
 		}
-		var newItem = { id: newId, name: itemName, slot: range[2], Gold: price };
+		var newItem = { id: newId, name: itemName, slot: slotType, Gold: price };
 		var statPairs = statsStr.match(/(\w+)\s+([+-]?\d+)/g);
 		if (statPairs) {
 			for (var i = 0; i < statPairs.length; i++) {
