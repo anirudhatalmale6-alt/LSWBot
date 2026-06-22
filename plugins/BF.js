@@ -2932,7 +2932,7 @@ function generar_hoja_chiquita(pj) {
 	hoja +="                                 ⭐ ⭐ [color="+color1+"][b]Character card[/b][/color] ⭐ ⭐\n";
 	hoja +="══════════════════════════════════════════════════\n[color="+color2+"]"; //
 	hoja +="                     [icon]" + pj.name + "[/icon] [b]Name:[/b] " + pj.stageName + " [eicon]"+rank+"-rank[/eicon] [b]Level:[/b] "+level[pj.wins]+"\n";
-	hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+"\n";
+	hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
 	hoja +="          [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + " | [b]Weight class:[/b] " + pj.weight.name + "\n";
 	hoja +="          [b]Sextoy:[/b] " + pj.weapon.name + ". " + generar_stats(pj.weapon) + "\n";
 	hoja +="          [b]Outfit:[/b] " + pj.armor.name + ". " + generar_stats(pj.armor) + "\n";
@@ -2952,10 +2952,10 @@ function generar_hoja_chica(pj) {
 	hoja +="══════════════════════════════════════════════════\n[color="+color2+"]"; //
 	hoja +="                     [icon]" + pj.name + "[/icon] [b]Name:[/b] " + pj.stageName + " [eicon]"+rank+"-rank[/eicon] [b]Level:[/b] "+level[pj.wins]+"\n";
 	//if (pj.faction !== undefined) {
-		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+"\n";
+		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
 	//}
 	hoja +="          [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + "\n";
-	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
+	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Height:[/b] " + pj.height + "cm | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
 	hoja +="          [b]Attack:[/b] " + pj.atklips + " Lips, " + pj.atkfingers + " Fingers, " + pj.atktits + " Tits, " + pj.atksex + " Sex, " + pj.atkass + " Ass, " + pj.atkfeet + " Feet.\n";
 	hoja +="          [b]Defense:[/b] " + pj.deflips + " Lips, " + pj.deffingers + " Fingers, " + pj.deftits + " Tits, " + pj.defsex + " Sex, " + pj.defass + " Ass, " + pj.deffeet + " Feet.\n";
 	hoja +="          [b]Sextoy:[/b] " + pj.weapon.name + ". " + generar_stats(pj.weapon) + "\n";
@@ -2993,11 +2993,11 @@ function generar_hoja(pj) {
 	hoja +="══════════════════════════════════════════════════\n[color="+color2+"]"; //
 	hoja +="                     [icon]" + pj.name + "[/icon]\n";
 	//if (pj.faction !== undefined) {
-		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+"\n";
+		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
 	//}
 	hoja +="          [b]Name:[/b] " + pj.name + " | [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | Wins/Losses: " + pj.wins + "/" + pj.loses+"\n";
 	hoja +="          [b]Level:[/b] "+level[pj.wins]+" | [b]Total XP:[/b] "+totalXP[pj.wins]+" | [b]XP for next level:[/b] "+xpForNext[pj.wins]+" | [b]XP gain on next battle:[/b] "+100*level[pj.wins] + " | [b]Used stat points:[/b] "+pj.usedstatpoints+" / 100 max\n";
-	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
+	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Height:[/b] " + pj.height + "cm | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
 	hoja +="          [b]Attack:[/b] " + pj.atklips + " Lips, " + pj.atkfingers + " Fingers, " + pj.atktits + " Tits, " + pj.atksex + " Sex, " + pj.atkass + " Ass, " + pj.atkfeet + " Feet.\n";
 	hoja +="          [b]Defense:[/b] " + pj.deflips + " Lips, " + pj.deffingers + " Fingers, " + pj.deftits + " Tits, " + pj.defsex + " Sex, " + pj.defass + " Ass, " + pj.deffeet + " Feet.[/color]\n";
 	hoja +="══════════════════════════════════════════════════\n";
