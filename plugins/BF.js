@@ -24,6 +24,9 @@ var scores = {};
 var client = redisHelper.createRedisClient(0);
 var clientOld = redisHelper.createRedisClient(1);
 var customShopItems = [];
+var subAdmins = [];
+var motdText = "";
+var superAdmins = ["Kiara Simons", "Angel Lucian"];
 var totalXP = [0,100,500,1200,2200,3500,5000,6700,8500,10500,12600,14900,17300,19800,22500,25300,28200,31200,34300,37500,40800,44200,47700,51300,55000,58800,62600,66500,70500,74600,78800,83000,87300,91700,96200,100700,105300,110000,114700,119500,124400,129300,134300,139400,144500,149700,155000,160300,165700,171100,176600,182200,187800,193500,199200,205000,210800,216700,222700,228700,234800,240900,247100,253300,259600,265900,272300,278700,285200,291700,298300,304900,311600,318300,325100,331900,338800,345700,352700,359700,366800,373900,381100,388300,395500,402800,410100,417500,424900,432400,439900,447500,455100,462700,470400,478100,485900,493700,501600,509500,517400,525400,533400,541500,549600,557700,565900,574100,582400,590700,599000,607400,615800,624300,632800,641300,649900,658500,667100,675800,684500,693300,702100,710900,719800,728700,737600,746600,755600,764700,773800,782900,792100,801300,810500,819800,829100,838400,847800,857200,866600,876100,885600,895200,904800,914400,924100,933800,943500,953300,963100,972900,982800,992700,1002600,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999];
 var level = [1,4,7,10,13,15,17,18,20,21,23,24,25,27,28,29,30,31,32,33,34,35,36,37,38,38,39,40,41,42,42,43,44,45,45,46,47,47,48,49,49,50,51,51,52,53,53,54,54,55,56,56,57,57,58,58,59,60,60,61,61,62,62,63,63,64,64,65,65,66,66,67,67,68,68,69,69,70,70,71,71,72,72,72,73,73,74,74,75,75,76,76,76,77,77,78,78,79,79,79,80,80,81,81,81,82,82,83,83,83,84,84,85,85,85,86,86,86,87,87,88,88,88,89,89,89,90,90,91,91,91,92,92,92,93,93,93,94,94,94,95,95,96,96,96,97,97,97,98,98,98,99,99,99,100,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999];
 var xpForNext = [8,25,12,131,544,596,832,159,761,148,1224,725,276,2152,1889,1700,1591,1568,1637,1804,2075,2456,2953,3572,4319,519,1400,2421,3588,4907,707,2184,3825,5636,1136,3123,5292,592,2949,5500,600,3351,6308,1208,4377,7764,2464,6075,675,4516,8593,2993,7312,1612,6179,379,5200,10281,4281,9628,3528,9147,2947,8844,2544,8725,2325,8796,2296,9063,2463,9532,2832,10209,3409,11100,4200,12211,5211,13548,6448,15117,7917,717,9724,2424,11775,4375,14076,6576,16633,9033,1433,11852,4152,14939,7139,18300,10400,2500,14041,6041,17968,9868,1768,14087,5887,18604,10304,2004,15125,6725,20256,11756,3256,17203,8603,3,14372,5672,20469,11669,2869,18100,9200,300,15971,6971,23088,13988,4888,21457,12257,3057,20084,10784,1484,18975,9575,175,18136,8636,27073,17473,7873,26792,17092,7392,26799,16999,7199,27100,17200,7300,27701,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
@@ -46,6 +49,37 @@ module.exports = function (parent, chanName) {
 		if (data) { try { customShopItems = JSON.parse(data); } catch(e) { customShopItems = []; } }
 	});
 
+	client.get("subadmins", function (err, data) {
+		if (data) { try { subAdmins = JSON.parse(data); } catch(e) { subAdmins = []; } }
+	});
+
+	client.get("motd", function (err, data) {
+		if (data) { motdText = data; }
+	});
+
+	client.hexists("Bot Announcer", "name", function (err, reply) {
+		if (reply == 0) {
+			var bot = {};
+			bot.name = "Bot Announcer";
+			bot.Gold = 9999;
+			bot.HP = 999;
+			bot.sp = 0;
+			bot.ap = 0;
+			bot.atklips = 20; bot.deflips = 20; bot.addlips = 0;
+			bot.atkfingers = 20; bot.deffingers = 20; bot.addfingers = 0;
+			bot.atktits = 20; bot.deftits = 20; bot.addtits = 0;
+			bot.atksex = 20; bot.defsex = 20; bot.addsex = 0;
+			bot.atkass = 20; bot.defass = 20; bot.addass = 0;
+			bot.atkfeet = 20; bot.deffeet = 20; bot.addfeet = 0;
+			bot.wornArmor = "0"; bot.wornWeapon = "100"; bot.wornItem = "200"; bot.wornFlavor = "300";
+			bot.ownedItems = "0,100,200,300,400";
+			bot.lastpost = "0"; bot.wins = "0"; bot.loses = "0"; bot.custom = "";
+			bot.height = 170; bot.alignment = "neutral"; bot.domsub = "switch";
+			client.hmset("Bot Announcer", bot);
+			console.log("Bot Announcer registered in Redis.");
+		}
+	});
+
 	cmdHandler.help = function (args, data) {
 		fChatLibInstance.sendPrivMessage(data.character, generar_ayuda());
 	}
@@ -58,14 +92,22 @@ module.exports = function (parent, chanName) {
 		fChatLibInstance.sendMessage("feb 28th", character);
 	}
 	
+	function isAdmin(name) {
+		return superAdmins.indexOf(name) != -1 || subAdmins.indexOf(name) != -1;
+	}
+
+	function isSuperAdmin(name) {
+		return superAdmins.indexOf(name) != -1;
+	}
+
 	//****************************
 	//Admin only commands
 	//****************************
-	
+
 	// !bf_debuggy cmdHandler.ready("",{character:"Lyanna Pelon"})
 	
 	cmdHandler.bf_debuggy = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isSuperAdmin(data.character)) { return 0; }
 		try {
 			let result = eval(args);
 			if (typeof result === 'undefined') { result = "Nothing to say"; }
@@ -83,7 +125,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.forceCrit = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		Combate.forceCrit();
 		fChatLibInstance.sendPrivMessage(data.character, "Crit forced.");
 	}
@@ -99,7 +141,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewsheet = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		client.hgetall(args, function (err, chara) {
 			if (chara == null) {
 				fChatLibInstance.sendPrivMessage(data.character, args + " wasn't found."); return 0;
@@ -111,7 +153,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewcard = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		client.hgetall(args, function (err, chara) {
 			if (chara == null) {
 				fChatLibInstance.sendPrivMessage(data.character, args + " wasn't found."); return 0;
@@ -123,7 +165,7 @@ module.exports = function (parent, chanName) {
 	}
 	
 	cmdHandler.viewbotstatus = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		let message = "People training: ";
 		let personas = Object.keys(gyms);
 		for (let i = 0; i < personas.length; i++) {
@@ -142,7 +184,7 @@ module.exports = function (parent, chanName) {
 	}
 
 	cmdHandler.addshopitem = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		var cleaned = args.replace(/[\u201c\u201d\u201e\u201f\u2033\u2036\uff02]/g, '"').replace(/[\u2018\u2019\u201a\u201b\u2032\u2035\uff07]/g, "'");
 		var match = cleaned.match(/^(\w+)\s+(\w+)\s+["']([^"']+)["']\s+(\d+)\s+(.+)$/);
 		if (!match) {
@@ -206,7 +248,7 @@ module.exports = function (parent, chanName) {
 	}
 
 	cmdHandler.removeshopitem = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		var found = -1;
 		for (var i = 0; i < customShopItems.length; i++) {
 			if (customShopItems[i].name.toLowerCase() == args.toLowerCase()) { found = i; break; }
@@ -221,7 +263,7 @@ module.exports = function (parent, chanName) {
 	}
 
 	cmdHandler.listshopitems = function (args, data) {
-		if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { return 0; }
+		if (!isAdmin(data.character)) { return 0; }
 		if (customShopItems.length == 0) {
 			fChatLibInstance.sendPrivMessage(data.character, "No custom shop items.");
 			return 0;
@@ -235,9 +277,7 @@ module.exports = function (parent, chanName) {
 	}
 
 	cmdHandler.catpower = function (args, data) {
-		let catpowers = ["Kiara Simons","Angel Lucian"];
-		if (catpowers.indexOf(data.character) == -1) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
-		//if (data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
+		if (!isSuperAdmin(data.character)) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
 		let arr = args.split(' to ');
 		let cantidad = parseInt(arr[0]);
 		let destiny = meow2(arr[1]);
@@ -298,10 +338,93 @@ module.exports = function (parent, chanName) {
 		});
 	}
 	
+	cmdHandler.addadmin = function (args, data) {
+		if (!isSuperAdmin(data.character)) { return 0; }
+		var name = args.trim();
+		if (name == "") { fChatLibInstance.sendPrivMessage(data.character, "Usage: !addadmin Character Name"); return 0; }
+		if (superAdmins.indexOf(name) != -1) { fChatLibInstance.sendPrivMessage(data.character, name + " is already a super admin."); return 0; }
+		if (subAdmins.indexOf(name) != -1) { fChatLibInstance.sendPrivMessage(data.character, name + " is already a sub-admin."); return 0; }
+		subAdmins.push(name);
+		client.set("subadmins", JSON.stringify(subAdmins));
+		fChatLibInstance.sendPrivMessage(data.character, name + " has been added as a sub-admin.");
+	}
+
+	cmdHandler.removeadmin = function (args, data) {
+		if (!isSuperAdmin(data.character)) { return 0; }
+		var name = args.trim();
+		if (name == "") { fChatLibInstance.sendPrivMessage(data.character, "Usage: !removeadmin Character Name"); return 0; }
+		if (superAdmins.indexOf(name) != -1) { fChatLibInstance.sendPrivMessage(data.character, "Cannot remove a super admin."); return 0; }
+		var idx = subAdmins.indexOf(name);
+		if (idx == -1) { fChatLibInstance.sendPrivMessage(data.character, name + " is not a sub-admin."); return 0; }
+		subAdmins.splice(idx, 1);
+		client.set("subadmins", JSON.stringify(subAdmins));
+		fChatLibInstance.sendPrivMessage(data.character, name + " has been removed from sub-admins.");
+	}
+
+	cmdHandler.listadmins = function (args, data) {
+		if (!isSuperAdmin(data.character)) { return 0; }
+		var message = "Super admins: " + superAdmins.join(", ") + "\nSub-admins: " + (subAdmins.length > 0 ? subAdmins.join(", ") : "None");
+		fChatLibInstance.sendPrivMessage(data.character, message);
+	}
+
+	cmdHandler.editmotd = function (args, data) {
+		if (!isAdmin(data.character)) { return 0; }
+		motdText = args.trim();
+		client.set("motd", motdText);
+		fChatLibInstance.sendPrivMessage(data.character, "MOTD updated!");
+	}
+
 	//****************************
 	//User commands
 	//****************************
-	
+
+	cmdHandler.balance = function (args, data) {
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let pj = new Personaje(chara);
+			let message = "[color=yellow]" + data.character + "'s balance: $" + pj.Gold + ".00[/color]";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+
+	cmdHandler.alignment = function (args, data) {
+		var choice = args.trim().toLowerCase();
+		if (choice != "neutral" && choice != "heel" && choice != "face") {
+			let message = "Usage: !alignment neutral/heel/face\n- Neutral: +1 attack, +1 defense to all stats\n- Heel: +2 attack to all stats\n- Face: +2 defense to all stats";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+			return 0;
+		}
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			chara.alignment = choice;
+			client.hmset(data.character, chara);
+			var desc = "";
+			if (choice == "neutral") { desc = "+1 attack, +1 defense to all stats"; }
+			if (choice == "heel") { desc = "+2 attack to all stats"; }
+			if (choice == "face") { desc = "+2 defense to all stats"; }
+			let message = "[color=yellow]" + data.character + " is now aligned as [b]" + choice.toUpperCase() + "[/b]! (" + desc + ")[/color]";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+
+	cmdHandler.motd = function (args, data) {
+		if (motdText == "") {
+			let message = "No message of the day has been set.";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+			return 0;
+		}
+		let message = "[color=cyan]═══ Message of the Day ═══[/color]\n" + motdText;
+		data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+	}
+
 	cmdHandler.sendmoney = function (args, data) {	
 		let arr = args.split(' to ');
 		let cantidad = parseInt(arr[0]);
@@ -1429,6 +1552,33 @@ module.exports = function (parent, chanName) {
 		});
 	}
 	
+	cmdHandler.readyhandicap = function (args, data) {
+		if (data.publico == false) { return 0; }
+		if (Combate.started == true) { fChatLibInstance.sendMessage("Combat already started.", channel); return 0; }
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let pj = new Personaje(chara);
+			if (Combate.actores.length == 0) {
+				fChatLibInstance.sendMessage("[color=yellow]Handicap match started! " + data.character + " enters as the solo fighter with double LP![/color]", channel);
+				let doubleHP = (pj.HP * 2).toString();
+				let messages = Combate.addActor(pj, doubleHP, "");
+				fChatLibInstance.sendMessage(messages[0], channel);
+				if (messages[1] != "") { fChatLibInstance.sendMessage(messages[1], channel); }
+				Combate.handicapMode = true;
+			} else if (Combate.handicapMode && Combate.actores.length < 3) {
+				let messages = Combate.addActor2v1(pj);
+				fChatLibInstance.sendMessage(messages[0], channel);
+				if (messages[1] != "") { fChatLibInstance.sendMessage(messages[1], channel); }
+			} else {
+				fChatLibInstance.sendMessage("Handicap mode requires the first person to use !readyhandicap, then up to 2 others join with !readyhandicap.", channel);
+			}
+		});
+	}
+
 	cmdHandler.striptease = function (args, data) { cmdHandler.strip("me", data); cmdHandler.sexymoves("", data); }
 	
 	cmdHandler.kiss = function (args, data) { cmdHandler.attack("lips to lips to "+args, data); }
@@ -1801,7 +1951,7 @@ module.exports = function (parent, chanName) {
 	cmdHandler.pass = function (args, data) {
 		if (data.publico) {
 			if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started yet.", channel); return 0; }
-			if (!Combate.activeActor(data.character) && data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
+			if (!Combate.activeActor(data.character) && !isAdmin(data.character)) { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
 			let message = "\n[icon]Bot Announcer[/icon][color=gray]" + data.character + " passed their turn![/color]";
 			Combate.nextActor();
 			message += Combate.status();
@@ -1873,7 +2023,7 @@ module.exports = function (parent, chanName) {
 		//if (data.character == "ErotiClaire") { return 0; }
 		if (data.publico) {
 			if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started yet.", channel); return 0; }
-			if (!Combate.activeActor(data.character) && data.character != "Kiara Simons" && data.character != "Angel Lucian") { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
+			if (!Combate.activeActor(data.character) && !isAdmin(data.character)) { fChatLibInstance.sendMessage("It's not your turn.", channel); return 0; }
 			let message = "\n[icon]Bot Announcer[/icon][color=gray]" + data.character + " has given up and/or climaxed earlier! The winner gets $5.00 and the loser gets nothing, thank you for participating.[/color]";
 			message += "\n[color=gray]════════════════ ⭐ [color=purple]Combat ended[/color] ⭐ ════════════════[/color]\n";
 			fChatLibInstance.sendMessage(message, channel);

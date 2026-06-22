@@ -34,6 +34,7 @@ function Combate() {
 	this.letras = ["A","B","C","D"];
 	this.even = false;
 	this.pins = {};
+	this.handicapMode = false;
 	
 	this.debug = function() {
 		console.log("Actores: "+this.actores);
@@ -221,6 +222,24 @@ function Combate() {
 		this.actores.push(actor);
 	}
 	
+	this.addActor2v1 = function(actor) {
+		for (var i = 0; i < this.actores.length; i++) { if (actor.name == this.actores[i].name) { return ["Already joined.",""]; } }
+		let rank = getRank(actor.usedstatpoints);
+		actor.maxHP = actor.HP;
+		var hoja = "\n[color=cyan]═════════════ ⭐ [color=purple]Handicap ring[/color] ⭐ ═════════════\n";
+		hoja += "          [icon]" + actor.name + "[/icon][eicon]"+rank+"-rank[/eicon] [b][color=pink]"+actor.stageName+"[/color][/b] has entered the handicap ring![/color]";
+		hoja += "\n          [color=cyan]Sextoy: "+actor.weapon.name+", Outfit: "+actor.armor.name+", Accessory: "+actor.item.name+", Other: "+actor.flavorr.name+".[/color]";
+		this.actores.push(actor);
+		var messages = [hoja, ""];
+		if (this.actores.length == 3) {
+			this.initiative();
+			var message = "\n"+icon+"[color=cyan] Welcome to the handicap ring! Tonight it's " + this.actores[0].stageName + " (2x LP solo) vs " + this.actores[1].stageName + " & " + this.actores[2].stageName + "! Who will hold out? Let's find out![/color]";
+			message += this.status();
+			messages[1] = message;
+		}
+		return messages;
+	}
+
 	this.setGender = function(dest) {
 		this.gender = dest;
 	}
@@ -321,6 +340,13 @@ function Combate() {
 				if (atacante.domsub == "sub") { damage -= 2; console.log("sub bonus"); }
 				if (atacante.domsub == "toy") { damage -= 4; console.log("toy bonus"); }
 			}
+			//alignment bonus
+			if (atacante.alignment == "heel") { damage += 2; console.log("heel atk bonus"); }
+			if (atacante.alignment == "face") { damage -= 2; console.log("face atk penalty"); }
+			if (defensor.alignment == "face") { damage -= 2; console.log("face def bonus"); }
+			if (defensor.alignment == "heel") { damage += 2; console.log("heel def penalty"); }
+			if (atacante.alignment == "neutral") { damage += 1; console.log("neutral atk bonus"); }
+			if (defensor.alignment == "neutral") { damage -= 1; console.log("neutral def bonus"); }
 			//bono por racha de victorias derrotas
 			if (atacante.cwins > 0 && atacante.domsub == "dom") {
 				damage += Math.min(Math.floor(atacante.cwins/3),3);
@@ -355,7 +381,16 @@ function Combate() {
 					}
 				}
 				if (defensor.removeHP(damage)) {
-					if (!statusSkip) {
+					if (this.handicapMode && this.actores.length > 2) {
+						message += "\n[color=red][b]" + defensor.stageName + " has been eliminated![/b][/color]";
+						for (var hi = 0; hi < this.actores.length; hi++) {
+							if (this.actores[hi].name == defensor.name) { this.actores.splice(hi, 1); break; }
+						}
+						delete this.pins[defensor.name];
+						if (!skipturn) { this.nextActor(); }
+						message += "\n[color=yellow]The fight continues! " + this.actores.length + " fighters remain![/color]";
+						message += this.status();
+					} else if (!statusSkip) {
 						if (Math.ceil(Math.random()*2) == 1 || !(!skipturn && letra != "me") || this.finisher || this.gender != "") {
 						//Normal
 						message += "\n" + atacante.stageName + " made " + defensor.stageName + " "+this.mode[4]+"! They both win $5.00, kinda anti-climactic if you ask me. I mean, why does the loser still get $5.00? Ah well.";
@@ -531,20 +566,33 @@ function Combate() {
 	this.status = function() {
 		if (this.teamsf == false) {
 			var hoja = "\n";
-			//bloque de texto que genera el estado del combate
 			if (this.started) {
-				hoja += "[color=cyan]═════════════════ ⭐ [color=purple]"+this.mode[5]+" ring[/color] ⭐ ═════════════════\n";
-				hoja += " " + hpBarL(this.actores[0].HP,this.actores[0].maxHP) + " ⭐ [color=purple]VS[/color] ⭐ " +  hpBarR(this.actores[1].HP,this.actores[1].maxHP) + "\n";
-				hoja += "► [icon]" + this.actores[0].name + "[/icon]                                                                  [icon]" + this.actores[1].name + "[/icon]\n";
-				
-				var pinStatus = "";
-				if (this.pins[this.actores[0].name]) { pinStatus += "[color=red]" + this.actores[0].stageName + " is PINNED![/color] "; }
-				if (this.pins[this.actores[1].name]) { pinStatus += "[color=red]" + this.actores[1].stageName + " is PINNED![/color] "; }
-				if (pinStatus != "") { hoja += pinStatus + "\n"; }
-				hoja += "It's " + this.actores[0].stageName + "'s turn![/color]\n";
-
+				if (this.handicapMode && this.actores.length == 3) {
+					hoja += "[color=cyan]═════════════ ⭐ [color=purple]Handicap ring[/color] ⭐ ═════════════\n";
+					for (var si = 0; si < this.actores.length; si++) {
+						hoja += " " + hpBarL(this.actores[si].HP,this.actores[si].maxHP) + " [icon]" + this.actores[si].name + "[/icon]" + (si == 0 ? " ◄" : "") + "\n";
+					}
+					var pinStatus = "";
+					for (var pi = 0; pi < this.actores.length; pi++) {
+						if (this.pins[this.actores[pi].name]) { pinStatus += "[color=red]" + this.actores[pi].stageName + " is PINNED![/color] "; }
+					}
+					if (pinStatus != "") { hoja += pinStatus + "\n"; }
+					hoja += "It's " + this.actores[0].stageName + "'s turn![/color]\n";
+				} else {
+					hoja += "[color=cyan]═════════════════ ⭐ [color=purple]"+this.mode[5]+" ring[/color] ⭐ ═════════════════\n";
+					hoja += " " + hpBarL(this.actores[0].HP,this.actores[0].maxHP) + " ⭐ [color=purple]VS[/color] ⭐ " +  hpBarR(this.actores[1].HP,this.actores[1].maxHP) + "\n";
+					hoja += "► [icon]" + this.actores[0].name + "[/icon]                                                                  [icon]" + this.actores[1].name + "[/icon]\n";
+					var pinStatus = "";
+					if (this.pins[this.actores[0].name]) { pinStatus += "[color=red]" + this.actores[0].stageName + " is PINNED![/color] "; }
+					if (this.pins[this.actores[1].name]) { pinStatus += "[color=red]" + this.actores[1].stageName + " is PINNED![/color] "; }
+					if (pinStatus != "") { hoja += pinStatus + "\n"; }
+					hoja += "It's " + this.actores[0].stageName + "'s turn![/color]\n";
+				}
 			} else {
-				if (this.actores.length > 0) {
+				if (this.handicapMode && this.actores.length > 0 && this.actores.length < 3) {
+					hoja += "[color=cyan]════════════════ ⭐ [color=purple]Handicap ring[/color] ⭐ ════════════════\n";
+					hoja += "          [icon]" + this.actores[0].name + "[/icon] (2x LP) is waiting for " + (3 - this.actores.length) + " challenger(s)![/color]\n";
+				} else if (this.actores.length > 0) {
 					hoja += "[color=cyan]════════════════ ⭐ [color=purple]"+this.mode[5]+" ring[/color] ⭐ ════════════════\n";
 					hoja += "          [icon]" + this.actores[0].name + "[/icon] Is waiting for a challenger! Don't keep 'em waiting![/color]\n";
 				} else {
@@ -601,6 +649,7 @@ function Combate() {
 		this.crits = true;
 		this.even = false;
 		this.pins = {};
+		this.handicapMode = false;
 	}
 	
 	function diceroll(crits) { console.log("crits: "+crits); console.log("crit: "+crit);

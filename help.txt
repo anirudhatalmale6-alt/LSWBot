@@ -14,7 +14,12 @@
 [color=pink]                    [b]!indulge {ATK/DEF} on {STAT}[/b][/color]: Decreases by 1 the selected stat. You get $10.00 back and max -3 on a stat without items.
                     Options: attack/defense to lips/fingers/tits/sex/ass/feet. Example: [b]!train defense on ass[/b]
 [color=pink]                    [b]!sendmoney # to {PERSON}[/b][/color]: Sends # money to the specified person. Example: [b]!sendmoney 1 to Kenia Nya[/b]
+[color=pink]                    [b]!balance[/b][/color]: Check your current gold balance.
+[color=pink]                    [b]!alignment {neutral/heel/face}[/b][/color]: Set your alignment. Neutral: +1 atk/def all. Heel: +2 atk all. Face: +2 def all.
+[color=pink]                    [b]!trainlp[/b][/color]: Increase your max LP by 1. Cost scales with current LP.
+[color=pink]                    [b]!setheight {CM}[/b][/color]: Set your height in cm (50-610). Affects pin success rates.
 [color=pink]                    [b]!resetcharacter[/b][/color]: Deletes all your items and stats but gives you the starting money, leaving you like if you just registered.
+[color=pink]                    [b]!motd[/b][/color]: View the message of the day.
 
 [color=purple]          [b]► Buy Equipment[/b][/color]
 [color=pink]                    [b]!outfits[/b][/color]: Open the clothes and outfits shop.
@@ -30,6 +35,9 @@
 [color=purple]          [b]► Combat[/b][/color]
 [color=pink]                    [b]!ready[/b][/color]: Get inside the ring.
 [color=pink]                    [b]!readyshort[/b][/color]: Get inside the ring but at only half lust (useful for short or handicap fights).
+[color=pink]                    [b]!readyhandicap[/b][/color]: Start a 2v1 handicap match. Solo fighter gets double LP, then 2 others join.
+[color=pink]                    [b]!pin[/b][/color]: Attempt to pin your opponent (50% base chance, affected by height). +4/-4 attack modifier.
+[color=pink]                    [b]!escape[/b][/color]: Attempt to break free from a pin.
 [color=pink]                    [b]!attack {BODYPART} to {BODYPART}[/b][/color]: Attack your opponent with the appropiate bodypart (lips/fingers/tits/sex/ass/feet).
                     Example: [b]!attack fingers to sex[/b] (pussy fingering or handjob)
 [color=pink]                    [b]!pass[/b][/color]: Pass your turn.

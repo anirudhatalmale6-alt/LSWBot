@@ -20,12 +20,14 @@ function Personaje (newChara) {
 	this.sp = readStat(newChara.sp);
 	this.alive = true;
 	this.Gold = parseInt(newChara.Gold);
+	if (isNaN(this.Gold)) { this.Gold = 0; }
 	if (newChara.faction !== undefined) { this.faction = newChara.faction; } else { this.faction = "None yet!"; }
 	
 	this.looking = (newChara.looking == undefined ? "no" : newChara.looking);
 	this.height = parseInt(newChara.height) || 170;
 	
 	this.domsub = (newChara.domsub === undefined ? "switch" : newChara.domsub);
+	this.alignment = (newChara.alignment === undefined ? "neutral" : newChara.alignment);
 	this.cwins = readStat(newChara.cwins);
 	this.closes = readStat(newChara.closes);
 	
@@ -219,7 +221,9 @@ function Personaje (newChara) {
 	}
 	
 	this.addGold = function(cantidad) {
+		if (isNaN(cantidad)) { cantidad = 0; }
 		this.Gold += cantidad;
+		if (isNaN(this.Gold)) { this.Gold = 0; }
 		newChara.Gold = this.Gold;
 	}
 	
@@ -298,7 +302,7 @@ function Personaje (newChara) {
 		for (let i = 0; i < this.equipment.length; i++) {
 			if (this.equipment[i].name.toLowerCase() == item.toLowerCase()) {
 				if (this.equipment[i].id == 0 || this.equipment[i].id == 100 || this.equipment[i].id == 200 || this.equipment[i].id == 300 || this.equipment[i].id == 400) { return -1; }
-				let ganancia = this.equipment[i].Gold;
+				let ganancia = parseInt(this.equipment[i].Gold) || 0;
 				let slot = this.equipment[i].slot;
 				let id = this.equipment[i].id;
 				let tempCustom = [];
@@ -470,6 +474,7 @@ function Personaje (newChara) {
 		newChara.custom = this.custom;
 		newChara.loadouts = this.loadouts;
 		newChara.domsub = this.domsub;
+		newChara.alignment = this.alignment;
 		newChara.height = this.height;
 
 		newChara.addlips = this.addlips; newChara.addfingers = this.addfingers; newChara.addtits = this.addtits;
