@@ -69,32 +69,32 @@ module.exports = function (parent, chanName) {
 	
 	cmdHandler.pinkbutton = function (args, data) {
 		fChatLibInstance.sendMessage(y+data.character+" notices a weird pink button and decides to press it... only to suddenly see how the bot suddenly strips and traps them in a hanging bondage harness! The bot then shows a pervert smile and starts to fuck the trapped one out of nowhere![/color]", channel);
-		fChatLibInstance.sendMessage("!fuck to "+data.character, channel);
+		fChatLibInstance.sendMessage("!fuck "+data.character, channel);
 		trapped = data.character;
 	}
-	
+
 	cmdHandler.greenbutton = function (args, data) {
 		if (trapped == "") { fChatLibInstance.sendMessage(g+data.character+" pushes a green button but nothing happens..."+ec, channel); return 0; }
 		fChatLibInstance.sendMessage(g+data.character+" pushes a green button and "+trapped+" is released from the fuck machine!"+ec, channel);
 		trapped = "";
 	}
-	
+
 	cmdHandler.redbutton = function (args, data) {
 		if (trapped == "") { fChatLibInstance.sendMessage(r+data.character+" pushes a red button but nothing happens..."+ec, channel); return 0; }
 		fChatLibInstance.sendMessage(r+data.character+" pushes a red button and makes the bot keep on fucking "+trapped+" some more!"+ec, channel);
-		fChatLibInstance.sendMessage("!fuck to "+trapped, channel);
+		fChatLibInstance.sendMessage("!fuck "+trapped, channel);
 	}
-	
+
 	cmdHandler.bluebutton = function (args, data) {
 		if (trapped == "") { fChatLibInstance.sendMessage(b+data.character+" pushes a blue button but nothing happens..."+ec, channel); return 0; }
 		fChatLibInstance.sendMessage(b+data.character+" pushes a blue button and makes the bot ass fuck "+trapped+" nice and deep!"+ec, channel);
-		fChatLibInstance.sendMessage("!assfuck to "+trapped, channel);
+		fChatLibInstance.sendMessage("!assfuck "+trapped, channel);
 	}
-	
+
 	cmdHandler.whitebutton = function (args, data) {
 		if (trapped == "") { fChatLibInstance.sendMessage(data.character+" pushes a white button but nothing happens...", channel); return 0; }
 		fChatLibInstance.sendMessage(data.character+" pushes a white button and makes the bot facefuck "+trapped+" all the way!", channel);
-		fChatLibInstance.sendMessage("!facefuck to "+trapped, channel);
+		fChatLibInstance.sendMessage("!facefuck "+trapped, channel);
 	}
 	
 	cmdHandler.twerk = function (args, data) {
