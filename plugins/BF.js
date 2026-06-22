@@ -277,7 +277,7 @@ module.exports = function (parent, chanName) {
 	}
 
 	cmdHandler.catpower = function (args, data) {
-		if (!isSuperAdmin(data.character)) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
+		if (!isAdmin(data.character)) { fChatLibInstance.sendMessage("/me [color=red]SPANKS[/color] "+data.character+"'s butt really hard, leaving a big red mark. [color=yellow]'Uh-uh, only the cat mistress can use this command!'[/color]",channel); return 0; }
 		let arr = args.split(' to ');
 		let cantidad = parseInt(arr[0]);
 		let destiny = meow2(arr[1]);
