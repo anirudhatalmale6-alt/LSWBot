@@ -26,6 +26,46 @@ var clientOld = redisHelper.createRedisClient(1);
 var customShopItems = [];
 var subAdmins = [];
 var motdText = "";
+var leaderboardCache = [];
+var leaderboardLastUpdate = 0;
+
+function refreshLeaderboard(callback) {
+	var now_ts = Date.now();
+	if (now_ts - leaderboardLastUpdate < 30000 && leaderboardCache.length > 0) {
+		if (callback) callback();
+		return;
+	}
+	client.keys("*", function (err, keys) {
+		if (err || !keys) { if (callback) callback(); return; }
+		var players = [];
+		var processed = 0;
+		var specialKeys = ["customshopitems", "subadmins", "motd"];
+		var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
+		if (validKeys.length === 0) { if (callback) callback(); return; }
+		validKeys.forEach(function(key) {
+			client.hgetall(key, function (err, chara) {
+				processed++;
+				if (chara && chara.wins !== undefined && chara.name) {
+					players.push({ name: chara.name, wins: parseInt(chara.wins) || 0 });
+				}
+				if (processed >= validKeys.length) {
+					players.sort(function(a, b) { return b.wins - a.wins; });
+					leaderboardCache = players;
+					leaderboardLastUpdate = now_ts;
+					if (callback) callback();
+				}
+			});
+		});
+	});
+}
+
+function getLeaderboardRank(playerName) {
+	for (var i = 0; i < leaderboardCache.length; i++) {
+		if (leaderboardCache[i].name === playerName) return i + 1;
+	}
+	return 0;
+}
+
 var superAdmins = ["Kiara Simons", "Angel Lucian"];
 var totalXP = [0,100,500,1200,2200,3500,5000,6700,8500,10500,12600,14900,17300,19800,22500,25300,28200,31200,34300,37500,40800,44200,47700,51300,55000,58800,62600,66500,70500,74600,78800,83000,87300,91700,96200,100700,105300,110000,114700,119500,124400,129300,134300,139400,144500,149700,155000,160300,165700,171100,176600,182200,187800,193500,199200,205000,210800,216700,222700,228700,234800,240900,247100,253300,259600,265900,272300,278700,285200,291700,298300,304900,311600,318300,325100,331900,338800,345700,352700,359700,366800,373900,381100,388300,395500,402800,410100,417500,424900,432400,439900,447500,455100,462700,470400,478100,485900,493700,501600,509500,517400,525400,533400,541500,549600,557700,565900,574100,582400,590700,599000,607400,615800,624300,632800,641300,649900,658500,667100,675800,684500,693300,702100,710900,719800,728700,737600,746600,755600,764700,773800,782900,792100,801300,810500,819800,829100,838400,847800,857200,866600,876100,885600,895200,904800,914400,924100,933800,943500,953300,963100,972900,982800,992700,1002600,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999,9999999];
 var level = [1,4,7,10,13,15,17,18,20,21,23,24,25,27,28,29,30,31,32,33,34,35,36,37,38,38,39,40,41,42,42,43,44,45,45,46,47,47,48,49,49,50,51,51,52,53,53,54,54,55,56,56,57,57,58,58,59,60,60,61,61,62,62,63,63,64,64,65,65,66,66,67,67,68,68,69,69,70,70,71,71,72,72,72,73,73,74,74,75,75,76,76,76,77,77,78,78,79,79,79,80,80,81,81,81,82,82,83,83,83,84,84,85,85,85,86,86,86,87,87,88,88,88,89,89,89,90,90,91,91,91,92,92,92,93,93,93,94,94,94,95,95,96,96,96,97,97,97,98,98,98,99,99,99,100,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999];
@@ -56,6 +96,9 @@ module.exports = function (parent, chanName) {
 	client.get("motd", function (err, data) {
 		if (data) { motdText = data; }
 	});
+
+	refreshLeaderboard();
+	setInterval(refreshLeaderboard, 60000);
 
 	client.hexists("Bot Announcer", "name", function (err, reply) {
 		if (reply == 0) {
@@ -2333,7 +2376,7 @@ module.exports = function (parent, chanName) {
 	//Dummy commands
 	//****************************
 	
-	cmdHandler.tutorial = function (argss, data) {
+/*	cmdHandler.tutorial = function (argss, data) {
 		let corte = argss.split(" ");
 		let args = corte[0]; let hp = parseInt(corte[1]);
 		if (isNaN(hp)) {
@@ -2369,9 +2412,9 @@ module.exports = function (parent, chanName) {
 			});
 		});
 		
-	}
+	}*/
 	
-	cmdHandler.succuboss = function (argss, data) {
+/*	cmdHandler.succuboss = function (argss, data) {
 		let corte = argss.split(" ");
 		let args = corte[0]; let hp = parseInt(corte[1]);
 		if (isNaN(hp)) {
@@ -2407,9 +2450,9 @@ module.exports = function (parent, chanName) {
 			});
 		});
 		
-	}
+	}*/
 	
-	cmdHandler.trainingdummy = function (argss, data) {
+/*	cmdHandler.trainingdummy = function (argss, data) {
 		let corte = argss.split(" ");
 		let args = corte[0]; let hp = parseInt(corte[1]);
 		if (isNaN(hp)) {
@@ -2446,9 +2489,9 @@ module.exports = function (parent, chanName) {
 			});
 		});
 		// end
-	}
+	}*/
 	
-	cmdHandler.trainingdummy2 = function (argss, data) {
+/*	cmdHandler.trainingdummy2 = function (argss, data) {
 		let corte = argss.split(" ");
 		let args = corte[0]; let hp = parseInt(corte[1]);
 		if (isNaN(hp)) {
@@ -2483,9 +2526,9 @@ module.exports = function (parent, chanName) {
 			});
 		});
 		//end
-	}
+	}*/
 	
-	cmdHandler.trainingdummy3 = function (argss, data) {
+/*	cmdHandler.trainingdummy3 = function (argss, data) {
 		let corte = argss.split(" ");
 		let args = corte[0]; let hp = parseInt(corte[1]);
 		if (isNaN(hp)) {
@@ -2519,7 +2562,7 @@ module.exports = function (parent, chanName) {
 			});
 		});
 		
-	}
+	}*/
 	
 	//****************************
 	//Shops
@@ -2667,6 +2710,58 @@ module.exports = function (parent, chanName) {
 		Combate.changeMode();
 	}
 	
+
+	cmdHandler.leaderboard = function (args, data) {
+		refreshLeaderboard();
+		client.keys("*", function (err, keys) {
+			if (err || !keys || keys.length === 0) {
+				fChatLibInstance.sendMessage("No players found.", channel);
+				return;
+			}
+			var players = [];
+			var processed = 0;
+			var specialKeys = ["customshopitems", "subadmins", "motd"];
+			var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
+			if (validKeys.length === 0) {
+				fChatLibInstance.sendMessage("No players found.", channel);
+				return;
+			}
+			validKeys.forEach(function(key) {
+				client.hgetall(key, function (err, chara) {
+					processed++;
+					if (chara && chara.wins !== undefined && chara.name) {
+						var wins = parseInt(chara.wins) || 0;
+						var loses = parseInt(chara.loses) || 0;
+						var cwins = parseInt(chara.cwins) || 0;
+						var closes = parseInt(chara.closes) || 0;
+						players.push({ name: chara.name, wins: wins, loses: loses, cwins: cwins, closes: closes });
+					}
+					if (processed >= validKeys.length) {
+						players.sort(function(a, b) { return b.wins - a.wins; });
+						var top = players.slice(0, 20);
+						var hoja = "\n";
+						hoja += "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n";
+						hoja += "                                 \u2B50 \u2B50 [color=purple][b]Leaderboard - Top 20[/b][/color] \u2B50 \u2B50\n";
+						hoja += "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n[color=pink]";
+						for (var i = 0; i < top.length; i++) {
+							var p = top[i];
+							var streak = "";
+							if (p.cwins >= 2) { streak = " [color=green]\u25B2" + p.cwins + "W streak[/color]"; }
+							else if (p.closes >= 2) { streak = " [color=red]\u25BC" + p.closes + "L streak[/color]"; }
+							var medal = "";
+							if (i === 0) { medal = "\u{1F947} "; }
+							else if (i === 1) { medal = "\u{1F948} "; }
+							else if (i === 2) { medal = "\u{1F949} "; }
+							hoja += "          [b]#" + (i + 1) + "[/b] " + medal + "[icon]" + p.name + "[/icon] " + p.name + " - [b]" + p.wins + "W / " + p.loses + "L[/b]" + streak + "\n";
+						}
+						hoja += "[/color]";
+						fChatLibInstance.sendMessage(hoja, channel);
+					}
+				});
+			});
+		});
+	}
+
     return cmdHandler;
 };
 
@@ -2933,7 +3028,7 @@ function generar_hoja_chiquita(pj) {
 	hoja +="══════════════════════════════════════════════════\n[color="+color2+"]"; //
 	hoja +="                     [icon]" + pj.name + "[/icon] [b]Name:[/b] " + pj.stageName + " [eicon]"+rank+"-rank[/eicon] [b]Level:[/b] "+level[pj.wins]+"\n";
 	hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
-	hoja +="          [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + " | [b]Weight class:[/b] " + pj.weight.name + "\n";
+	hoja +="          [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + " | [b]Weight class:[/b] " + pj.weight.name + " | [b]Rank:[/b] #" + getLeaderboardRank(pj.name) + "\n";
 	hoja +="          [b]Sextoy:[/b] " + pj.weapon.name + ". " + generar_stats(pj.weapon) + "\n";
 	hoja +="          [b]Outfit:[/b] " + pj.armor.name + ". " + generar_stats(pj.armor) + "\n";
 	hoja +="          [b]Accessory:[/b] " + pj.item.name + ". " + generar_stats(pj.item) + "\n";
@@ -2954,7 +3049,7 @@ function generar_hoja_chica(pj) {
 	//if (pj.faction !== undefined) {
 		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
 	//}
-	hoja +="          [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + "\n";
+	hoja +="          [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | [b]Wins/Losses:[/b] " + pj.wins + "/" + pj.loses + " | [b]Rank:[/b] #" + getLeaderboardRank(pj.name) + "\n";
 	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Height:[/b] " + pj.height + "cm | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
 	hoja +="          [b]Attack:[/b] " + pj.atklips + " Lips, " + pj.atkfingers + " Fingers, " + pj.atktits + " Tits, " + pj.atksex + " Sex, " + pj.atkass + " Ass, " + pj.atkfeet + " Feet.\n";
 	hoja +="          [b]Defense:[/b] " + pj.deflips + " Lips, " + pj.deffingers + " Fingers, " + pj.deftits + " Tits, " + pj.defsex + " Sex, " + pj.defass + " Ass, " + pj.deffeet + " Feet.\n";
@@ -2995,7 +3090,7 @@ function generar_hoja(pj) {
 	//if (pj.faction !== undefined) {
 		hoja +="          [b]Faction:[/b] " + pj.faction+ " [b]Dom/sub role:[/b] "+pj.domsub+" [b]Alignment:[/b] "+(pj.alignment || "neutral").toUpperCase()+"\n";
 	//}
-	hoja +="          [b]Name:[/b] " + pj.name + " | [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | Wins/Losses: " + pj.wins + "/" + pj.loses+"\n";
+	hoja +="          [b]Name:[/b] " + pj.name + " | [b]Money:[/b] $" + pj.Gold + ".00 | [b]Stat points:[/b] " + pj.sp + " | Wins/Losses: " + pj.wins + "/" + pj.loses + " | [b]Rank:[/b] #" + getLeaderboardRank(pj.name) + "\n";
 	hoja +="          [b]Level:[/b] "+level[pj.wins]+" | [b]Total XP:[/b] "+totalXP[pj.wins]+" | [b]XP for next level:[/b] "+xpForNext[pj.wins]+" | [b]XP gain on next battle:[/b] "+100*level[pj.wins] + " | [b]Used stat points:[/b] "+pj.usedstatpoints+" / 100 max\n";
 	hoja +="          [b]Weight class:[/b] " + pj.weight.name + " | [b]Base LP:[/b] " + pj.HP + " | [b]Height:[/b] " + pj.height + "cm | [b]Strip chance:[/b] " + signo(pj.stripchance) + "%\n";
 	hoja +="          [b]Attack:[/b] " + pj.atklips + " Lips, " + pj.atkfingers + " Fingers, " + pj.atktits + " Tits, " + pj.atksex + " Sex, " + pj.atkass + " Ass, " + pj.atkfeet + " Feet.\n";

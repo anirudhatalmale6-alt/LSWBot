@@ -20,6 +20,7 @@
 [color=pink]                    [b]!setheight {CM}[/b][/color]: Set your height in cm (50-610). Affects pin success rates.
 [color=pink]                    [b]!resetcharacter[/b][/color]: Deletes all your items and stats but gives you the starting money, leaving you like if you just registered.
 [color=pink]                    [b]!motd[/b][/color]: View the message of the day.
+[color=pink]                    [b]!leaderboard[/b][/color]: View the top 20 players by wins.
 
 [color=purple]          [b]► Buy Equipment[/b][/color]
 [color=pink]                    [b]!outfits[/b][/color]: Open the clothes and outfits shop.
@@ -45,12 +46,5 @@
 [color=pink]                    [b]!savefight[/b][/color]: Saves the current combat.
 [color=pink]                    [b]!savedfights[/b][/color]: Shows a list of the saved combats.
 [color=pink]                    [b]!loadfight #[/b][/color]: Loads a selected combat. (use [b]!savedfights[/b] to get the number of your saved combat first)
-
-[color=purple]          [b]► Training dummy[/b][/color]
-[color=pink]                    [b]!trainingdummy[/b][/color]: Lets you fight an automated female opponent in private messages, you earn money as usual but can only fight 3 times a day.
-[color=pink]                    [b]!trainingdummy2[/b][/color]: Male version. (doesn't have emotes)
-[color=pink]                    [b]!succuboss[/b][/color]: Boss fight! Costs $2.00 to fight but if you win you get $6.00! Very hard opponent and has a few tricks...
-[color=pink]                    [b]!time2dummy[/b][/color]: Lets you know the time left before you can fight the training dummy again.
-                    The same commands that are used in normal combat are used to fight the training dummy, and they only work in private messages. (!attack, !pass, !endfight)
 
 [color=pink]                    [b]The bot can read the commands either from the main room or from private messages.[/b][/color][/color]
