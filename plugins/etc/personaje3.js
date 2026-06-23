@@ -302,7 +302,7 @@ function Personaje (newChara) {
 		for (let i = 0; i < this.equipment.length; i++) {
 			if (this.equipment[i].name.toLowerCase() == item.toLowerCase()) {
 				if (this.equipment[i].id == 0 || this.equipment[i].id == 100 || this.equipment[i].id == 200 || this.equipment[i].id == 300 || this.equipment[i].id == 400) { return -1; }
-				let ganancia = parseInt(this.equipment[i].Gold) || 0;
+				let ganancia = Math.floor((parseInt(this.equipment[i].Gold) || 0) / 2);
 				let slot = this.equipment[i].slot;
 				let id = this.equipment[i].id;
 				let tempCustom = [];
@@ -326,24 +326,29 @@ function Personaje (newChara) {
 	
 	this.renameItem = function(original, nuevo) {
 		for (let i = 0; i < this.equipment.length; i++) {
-			if (this.equipment[i].name.toLowerCase() == original.toLowerCase()) { //if found...
+			if (this.equipment[i].name.toLowerCase() == original.toLowerCase()) {
+				let tempNuevo = nuevo.split(" $ ");
+				let newName = tempNuevo.length == 2 ? tempNuevo[0] : nuevo;
+				let newFlavor = tempNuevo.length == 2 ? tempNuevo[1] : undefined;
+				this.equipment[i].name = newName;
+				if (newFlavor !== undefined) { this.equipment[i].flavor = newFlavor; }
 				let tempCustom = [];
 				for (j = 0; j < customObjectArray.length; j++) {
 					if (customObjectArray[j].id != this.equipment[i].id) {
-						tempCustom.push(JSON.stringify(customObjectArray[j])); //make a new custom array without the new item to be renamed...
+						tempCustom.push(JSON.stringify(customObjectArray[j]));
 					}
 				}
 				let data = {};
-				data.id = this.equipment[i].id;
-				let tempNuevo = nuevo.split(" $ ");
-				if (tempNuevo.length == 2) {
-					data.name = tempNuevo[0];
-					data.flavor = tempNuevo[1];
-				} else {
-					data.name = nuevo;
+				let keys = Object.keys(this.equipment[i]);
+				for (let k = 0; k < keys.length; k++) { data[keys[k]] = this.equipment[i][keys[k]]; }
+				tempCustom.push(JSON.stringify(data));
+				this.custom = tempCustom.join("#meow#");
+				for (j = 0; j < customObjectArray.length; j++) {
+					if (customObjectArray[j].id == this.equipment[i].id) {
+						customObjectArray[j] = data;
+						break;
+					}
 				}
-				tempCustom.push(JSON.stringify(data)); //add the new custom item
-				this.custom = tempCustom.join("#meow#"); //save into the stringed array
 				return true;
 			}
 		}
