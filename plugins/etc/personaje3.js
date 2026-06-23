@@ -313,11 +313,11 @@ function Personaje (newChara) {
 				}
 				this.custom = tempCustom.join("#meow#");
 				this.equipment.splice(i, 1);
-				if (slot == "armor") { this.armor = buscaId("0",customObjectArray); } 
-				if (slot == "weapon") { this.weapon = buscaId("100",customObjectArray); }
-				if (slot == "item") { this.item = buscaId("200",customObjectArray); }
-				if (slot == "flavor") { this.flavorr = buscaId("300",customObjectArray); }
-				if (slot == "addiction") { this.addiction = buscaId("400",customObjectArray); }
+				if (this.armor && this.armor.id == id) { this.armor = buscaId("0",customObjectArray); }
+				if (this.weapon && this.weapon.id == id) { this.weapon = buscaId("100",customObjectArray); }
+				if (this.item && this.item.id == id) { this.item = buscaId("200",customObjectArray); }
+				if (this.flavorr && this.flavorr.id == id) { this.flavorr = buscaId("300",customObjectArray); }
+				if (this.addiction && this.addiction.id == id) { this.addiction = buscaId("400",customObjectArray); }
 				return ganancia;
 			}
 		}
