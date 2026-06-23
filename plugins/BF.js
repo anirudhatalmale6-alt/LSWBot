@@ -2715,7 +2715,7 @@ module.exports = function (parent, chanName) {
 		refreshLeaderboard();
 		client.keys("*", function (err, keys) {
 			if (err || !keys || keys.length === 0) {
-				fChatLibInstance.sendMessage("No players found.", channel);
+				data.publico ? fChatLibInstance.sendMessage("No players found.", channel) : fChatLibInstance.sendPrivMessage(data.character, "No players found.");
 				return;
 			}
 			var players = [];
@@ -2723,7 +2723,7 @@ module.exports = function (parent, chanName) {
 			var specialKeys = ["customshopitems", "subadmins", "motd"];
 			var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
 			if (validKeys.length === 0) {
-				fChatLibInstance.sendMessage("No players found.", channel);
+				data.publico ? fChatLibInstance.sendMessage("No players found.", channel) : fChatLibInstance.sendPrivMessage(data.character, "No players found.");
 				return;
 			}
 			validKeys.forEach(function(key) {
@@ -2755,7 +2755,7 @@ module.exports = function (parent, chanName) {
 							hoja += "          [b]#" + (i + 1) + "[/b] " + medal + "[icon]" + p.name + "[/icon] " + p.name + " - [b]" + p.wins + "W / " + p.loses + "L[/b]" + streak + "\n";
 						}
 						hoja += "[/color]";
-						fChatLibInstance.sendMessage(hoja, channel);
+						data.publico ? fChatLibInstance.sendMessage(hoja, channel) : fChatLibInstance.sendPrivMessage(data.character, hoja);
 					}
 				});
 			});
