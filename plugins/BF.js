@@ -2,12 +2,8 @@
 var channel;
 var users;
 var now = require('moment');
-var jsonfile = require('jsonfile');
 var fs = require('fs');
 var requireNew = require('require-new');
-var saveDir = process.cwd()+"/saves";
-var saveFile = "/saves.js";
-var saveFile2 = "/trashcan.js";
 var redisHelper = require("../redisHelper");
 var yuni = require('./etc/yuni.js');
 var milly = require('./etc/milly.js');
@@ -26,6 +22,8 @@ var clientOld = redisHelper.createRedisClient(1);
 var customShopItems = [];
 var subAdmins = [];
 var bannedUsers = [];
+var savedFightsCache = [];
+var savedFights2Cache = [];
 var motdText = "";
 var leaderboardCache = [];
 var leaderboardLastUpdate = 0;
@@ -96,6 +94,14 @@ module.exports = function (parent, chanName) {
 
 	client.get("bannedusers", function (err, data) {
 		if (data) { try { bannedUsers = JSON.parse(data); } catch(e) { bannedUsers = []; } }
+	});
+
+	client.get("savedfights", function (err, data) {
+		if (data) { try { savedFightsCache = JSON.parse(data); } catch(e) { savedFightsCache = []; } }
+	});
+
+	client.get("savedfights2", function (err, data) {
+		if (data) { try { savedFights2Cache = JSON.parse(data); } catch(e) { savedFights2Cache = []; } }
 	});
 
 	client.get("motd", function (err, data) {
@@ -3257,43 +3263,21 @@ function signo(x) { return x > 0 ? "+" + x : x; }
 function wor(x) { return x > 0 ? "weakness lvl " + Math.abs(x) : "resistance lvl " + Math.abs(x); }
 
 function loadData() {
-	try {
-		if (fs.statSync(saveDir+saveFile)) {
-			return jsonfile.readFileSync(saveDir+saveFile);
-		} else {
-			return [];
-		}
-	}
-	catch(err){
-		return [];
-	}
+	return savedFightsCache;
 }
 
 function saveData(data) {
-	if (!fs.existsSync(saveDir)){
-		fs.mkdirSync(saveDir);
-	}
-	jsonfile.writeFileSync(saveDir+saveFile, data);
+	savedFightsCache = data;
+	client.set("savedfights", JSON.stringify(data));
 }
 
 function loadData2() {
-	try {
-		if (fs.statSync(saveDir+saveFile2)) {
-			return jsonfile.readFileSync(saveDir+saveFile2);
-		} else {
-			return [];
-		}
-	}
-	catch(err){
-		return [];
-	}
+	return savedFights2Cache;
 }
 
 function saveData2(data) {
-	if (!fs.existsSync(saveDir)){
-		fs.mkdirSync(saveDir);
-	}
-	jsonfile.writeFileSync(saveDir+saveFile2, data);
+	savedFights2Cache = data;
+	client.set("savedfights2", JSON.stringify(data));
 }
 
 function searchDestinies(part) {
