@@ -25,6 +25,7 @@ var client = redisHelper.createRedisClient(0);
 var clientOld = redisHelper.createRedisClient(1);
 var customShopItems = [];
 var subAdmins = [];
+var bannedUsers = [];
 var motdText = "";
 var leaderboardCache = [];
 var leaderboardLastUpdate = 0;
@@ -93,6 +94,10 @@ module.exports = function (parent, chanName) {
 		if (data) { try { subAdmins = JSON.parse(data); } catch(e) { subAdmins = []; } }
 	});
 
+	client.get("bannedusers", function (err, data) {
+		if (data) { try { bannedUsers = JSON.parse(data); } catch(e) { bannedUsers = []; } }
+	});
+
 	client.get("motd", function (err, data) {
 		if (data) { motdText = data; }
 	});
@@ -141,6 +146,10 @@ module.exports = function (parent, chanName) {
 
 	function isSuperAdmin(name) {
 		return superAdmins.indexOf(name) != -1;
+	}
+
+	function isBanned(name) {
+		return bannedUsers.indexOf(name) != -1;
 	}
 
 	//****************************
@@ -407,6 +416,34 @@ module.exports = function (parent, chanName) {
 	cmdHandler.listadmins = function (args, data) {
 		if (!isSuperAdmin(data.character)) { return 0; }
 		var message = "Super admins: " + superAdmins.join(", ") + "\nSub-admins: " + (subAdmins.length > 0 ? subAdmins.join(", ") : "None");
+		fChatLibInstance.sendPrivMessage(data.character, message);
+	}
+
+	cmdHandler.ban = function (args, data) {
+		if (!isAdmin(data.character)) { return 0; }
+		var name = args.trim();
+		if (name == "") { fChatLibInstance.sendPrivMessage(data.character, "Usage: !ban Character Name"); return 0; }
+		if (isAdmin(name)) { fChatLibInstance.sendPrivMessage(data.character, "Cannot ban an admin."); return 0; }
+		if (bannedUsers.indexOf(name) != -1) { fChatLibInstance.sendPrivMessage(data.character, name + " is already banned."); return 0; }
+		bannedUsers.push(name);
+		client.set("bannedusers", JSON.stringify(bannedUsers));
+		fChatLibInstance.sendPrivMessage(data.character, name + " has been banned from using bot commands.");
+	}
+
+	cmdHandler.unban = function (args, data) {
+		if (!isAdmin(data.character)) { return 0; }
+		var name = args.trim();
+		if (name == "") { fChatLibInstance.sendPrivMessage(data.character, "Usage: !unban Character Name"); return 0; }
+		var idx = bannedUsers.indexOf(name);
+		if (idx == -1) { fChatLibInstance.sendPrivMessage(data.character, name + " is not banned."); return 0; }
+		bannedUsers.splice(idx, 1);
+		client.set("bannedusers", JSON.stringify(bannedUsers));
+		fChatLibInstance.sendPrivMessage(data.character, name + " has been unbanned.");
+	}
+
+	cmdHandler.banlist = function (args, data) {
+		if (!isAdmin(data.character)) { return 0; }
+		var message = "Banned users: " + (bannedUsers.length > 0 ? bannedUsers.join(", ") : "None");
 		fChatLibInstance.sendPrivMessage(data.character, message);
 	}
 
@@ -2678,6 +2715,10 @@ module.exports = function (parent, chanName) {
 				};
 				let newData = data;
 				newData.publico = false;
+				if (isBanned(data.character)) {
+					fChatLibInstance.sendPrivMessage(data.character, "You have been banned from using bot commands. Please contact [user]Kiara Simons[/user] for an appeal.");
+					return;
+				}
 				if (typeof cmdHandler[opts.command] === 'function') {
 					cmdHandler[opts.command](opts.argument, newData);
 				} else {
@@ -2762,7 +2803,17 @@ module.exports = function (parent, chanName) {
 		});
 	}
 
-    return cmdHandler;
+    var wrappedHandler = {};
+    Object.keys(cmdHandler).forEach(function(cmd) {
+        wrappedHandler[cmd] = function(args, data) {
+            if (isBanned(data.character) && !isAdmin(data.character)) {
+                fChatLibInstance.sendPrivMessage(data.character, "You have been banned from using bot commands. Please contact [user]Kiara Simons[/user] for an appeal.");
+                return;
+            }
+            cmdHandler[cmd](args, data);
+        };
+    });
+    return wrappedHandler;
 };
 
 function logica_dummy(data, origin, destiny) {
