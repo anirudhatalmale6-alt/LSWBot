@@ -3,6 +3,7 @@ var channel;
 var users;
 var now = require('moment');
 var fs = require('fs');
+var jsonfile = require('jsonfile');
 var requireNew = require('require-new');
 var redisHelper = require("../redisHelper");
 var yuni = require('./etc/yuni.js');
@@ -98,10 +99,30 @@ module.exports = function (parent, chanName) {
 
 	client.get("savedfights", function (err, data) {
 		if (data) { try { savedFightsCache = JSON.parse(data); } catch(e) { savedFightsCache = []; } }
+		else {
+			try {
+				var oldSaves = require("jsonfile").readFileSync(process.cwd()+"/saves/saves.js");
+				if (oldSaves && oldSaves.length > 0) {
+					savedFightsCache = oldSaves;
+					client.set("savedfights", JSON.stringify(oldSaves));
+					console.log("Migrated " + oldSaves.length + " saved fights from filesystem to Redis.");
+				}
+			} catch(e) { console.log("No filesystem saves to migrate."); }
+		}
 	});
 
 	client.get("savedfights2", function (err, data) {
 		if (data) { try { savedFights2Cache = JSON.parse(data); } catch(e) { savedFights2Cache = []; } }
+		else {
+			try {
+				var oldSaves = require("jsonfile").readFileSync(process.cwd()+"/saves/trashcan.js");
+				if (oldSaves && oldSaves.length > 0) {
+					savedFights2Cache = oldSaves;
+					client.set("savedfights2", JSON.stringify(oldSaves));
+					console.log("Migrated " + oldSaves.length + " trashcan saves from filesystem to Redis.");
+				}
+			} catch(e) { console.log("No filesystem trashcan to migrate."); }
+		}
 	});
 
 	client.get("motd", function (err, data) {
@@ -1596,7 +1617,7 @@ module.exports = function (parent, chanName) {
 		let arr = args.split(" to ");
 		if (arr.length != 2) {fChatLibInstance.sendMessage("Incorrect spelling, remember to add 'to', like this: !bet 10 to Kenia Nya", channel); return 0; }
 		let cantidad = arr[0];
-		if (cantidad > 50) { fChatLibInstance.sendMessage("You can't bet over $50, sorry", channel); return 0; }
+		if (cantidad > 100) { fChatLibInstance.sendMessage("You can't bet over $100, sorry", channel); return 0; }
 		let persona = arr[1];
 		if (Combate.actores[0].name != persona && Combate.actores[1].name != persona) { fChatLibInstance.sendMessage(persona + " wasn't found in the current match.", channel); return 0; }
 		if (isNaN(cantidad) || cantidad < 1) { fChatLibInstance.sendMessage("Betting amount should be a positive number.", channel); return 0; }
