@@ -1310,7 +1310,7 @@ module.exports = function (parent, chanName) {
 		client.send_command("scan", ["0", "count", "10000"], function(err, reply) {
 			if (reply == null) { console.log("Error! "+err); return 0; }
 			//console.log(reply[1].join(", "));
-			let users = reply[1];
+			let users = reply[1].filter(function(k) { return ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"].indexOf(k) === -1; });
 			let factions = {};
 			for (let i = 0; i < users.length; i++) {
 				client.hgetall(users[i], function (err, chara) {
@@ -1335,7 +1335,7 @@ module.exports = function (parent, chanName) {
 		client.send_command("scan", ["0", "count", "10000"], function(err, reply) {
 			if (reply == null) { console.log("Error! "+err); return 0; }
 			//console.log(reply[1].join(", "));
-			let users = reply[1];
+			let users = reply[1].filter(function(k) { return ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"].indexOf(k) === -1; });
 			let roles = {};
 			for (let i = 0; i < users.length; i++) {
 				client.hgetall(users[i], function (err, chara) {
@@ -1508,7 +1508,7 @@ module.exports = function (parent, chanName) {
 		client.send_command("scan", ["0", "count", "10000"], function(err, reply) {
 			if (reply == null) { console.log("Error! "+err); return 0; }
 			//console.log(reply[1].join(", "));
-			let userList = reply[1];
+			let userList = reply[1].filter(function(k) { return ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"].indexOf(k) === -1; });
 			let looking = [];
 			for (let i = 0; i < userList.length; i++) {
 				
@@ -1539,7 +1539,7 @@ module.exports = function (parent, chanName) {
 		client.send_command("scan", ["0", "count", "10000"], function(err, reply) {
 			if (reply == null) { console.log("Error! "+err); return 0; }
 			//console.log(reply[1].join(", "));
-			let userList = reply[1];
+			let userList = reply[1].filter(function(k) { return ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"].indexOf(k) === -1; });
 			let looking = [];
 			for (let i = 0; i < userList.length; i++) {
 				
