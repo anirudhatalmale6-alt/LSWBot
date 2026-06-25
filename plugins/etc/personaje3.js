@@ -152,6 +152,10 @@ function Personaje (newChara) {
 	names = Object.keys(this.weight);
 	names.splice(0,4);
 	this.stripchance = 0;
+	this.pinchance = readStat(newChara.pinchance);
+	this.pindefchance = readStat(newChara.pindefchance);
+	this.stripdefchance = readStat(newChara.stripdefchance);
+	this.trainedstripchance = readStat(newChara.trainedstripchance);
 	for (let i = 0; i < names.length; i++) {
 		this[names[i]] += this.weight[names[i]];
 	};
@@ -485,6 +489,10 @@ function Personaje (newChara) {
 		newChara.addlips = this.addlips; newChara.addfingers = this.addfingers; newChara.addtits = this.addtits;
 		newChara.addsex = this.addsex; newChara.addass = this.addass; newChara.addfeet = this.addfeet; 
 		newChara.addsight = this.addsight; newChara.addbody = this.addbody;
+		newChara.trainedstripchance = this.trainedstripchance;
+		newChara.stripdefchance = this.stripdefchance;
+		newChara.pindefchance = this.pindefchance;
+		newChara.pinchance = this.pinchance;
 		if (this.faction !== undefined) { newChara.faction = this.faction; }
 		
 		let ownedItemsID = [];

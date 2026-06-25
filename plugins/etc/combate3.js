@@ -34,6 +34,8 @@ function Combate() {
 	this.letras = ["A","B","C","D"];
 	this.even = false;
 	this.pins = {};
+	this.pinTurns = {};
+	this.failedPinBonus = {};
 	this.handicapMode = false;
 	
 	this.debug = function() {
@@ -89,15 +91,20 @@ function Combate() {
 		var targetHeight = target.height || 170;
 		var heightDiff = pinnerHeight - targetHeight;
 		chance += Math.floor(heightDiff / 5);
+		if (pinner.pinchance) { chance += pinner.pinchance; }
+		if (target.pindefchance) { chance -= target.pindefchance; }
+		if (this.failedPinBonus[pinner.name]) { chance += this.failedPinBonus[pinner.name]; delete this.failedPinBonus[pinner.name]; }
 		if (chance < 10) { chance = 10; }
 		if (chance > 90) { chance = 90; }
 		var roll = Math.ceil(Math.random() * 100);
 		var message = "";
 		if (roll <= chance) {
 			this.pins[target.name] = pinnerName;
+			this.pinTurns[target.name] = 0;
 			message = "\n" + icon + " [color=yellow][b]" + pinner.stageName + "[/b] attempts to pin [b]" + target.stageName + "[/b]... SUCCESS! " + target.stageName + " is pinned down! (+4 attack for " + pinner.stageName + ", -4 attack for " + target.stageName + ")[/color]";
 		} else {
-			message = "\n" + icon + " [color=gray][b]" + pinner.stageName + "[/b] attempts to pin [b]" + target.stageName + "[/b]... but " + target.stageName + " slips free![/color]";
+			this.failedPinBonus[target.name] = (this.failedPinBonus[target.name] || 0) + 20;
+			message = "\n" + icon + " [color=gray][b]" + pinner.stageName + "[/b] attempts to pin [b]" + target.stageName + "[/b]... but " + target.stageName + " slips free! (" + target.stageName + " gains +20% pin chance)[/color]";
 		}
 		this.nextActor();
 		message += this.status();
@@ -117,12 +124,17 @@ function Combate() {
 		var pinnerHeight = pinner.height || 170;
 		var heightDiff = escaperHeight - pinnerHeight;
 		chance += Math.floor(heightDiff / 5);
+		var pinDuration = this.pinTurns[escaper.name] || 0;
+		chance -= pinDuration * 5;
+		if (escaper.pindefchance) { chance += escaper.pindefchance; }
+		if (pinner.pinchance) { chance -= pinner.pinchance; }
 		if (chance < 10) { chance = 10; }
 		if (chance > 90) { chance = 90; }
 		var roll = Math.ceil(Math.random() * 100);
 		var message = "";
 		if (roll <= chance) {
 			delete this.pins[escaper.name];
+			delete this.pinTurns[escaper.name];
 			message = "\n" + icon + " [color=green][b]" + escaper.stageName + "[/b] struggles and breaks free from the pin![/color]";
 		} else {
 			message = "\n" + icon + " [color=red][b]" + escaper.stageName + "[/b] tries to escape the pin... but can't break free![/color]";
@@ -356,8 +368,8 @@ function Combate() {
 				damage -= Math.min(Math.floor(atacante.closes/3),3);
 				console.log("lose streak bonus");
 			}
-			if (this.pins[defensor.name] == atacante.name) { damage += 4; console.log("pin attacker bonus"); }
-			if (this.pins[atacante.name] == defensor.name) { damage -= 4; console.log("pin defender penalty"); }
+				if (this.pins[defensor.name] == atacante.name) { var pinBonus = Math.min(4 + (this.pinTurns[defensor.name] || 0), 10); damage += pinBonus; this.pinTurns[defensor.name] = (this.pinTurns[defensor.name] || 0) + 1; console.log("pin attacker bonus: +" + pinBonus); }
+				if (this.pins[atacante.name] == defensor.name) { var pinPenalty = Math.min(4 + (this.pinTurns[atacante.name] || 0), 10); damage -= pinPenalty; console.log("pin defender penalty: -" + pinPenalty); }
 			if (damage <= 0) { damage = 1; }
 			
 			if (score !== undefined) { if (!isNaN(score)) { damage += Math.floor(score/20); console.log("Score in combat: "+Math.floor(score/20)); } }
@@ -450,7 +462,9 @@ function Combate() {
 			if (defensor.alive == false) { return "That player is out or KO'd."; }
 		}
 		if (defensor.armor.id == 0 && defensor.weapon.id == 100 && defensor.item.id == 200) { return "Your opponent is not wearing any outfit to strip."; }
-		var dado = Math.ceil(Math.random() * 100) - atacante.stripchance;
+		var stripBonus = (atacante.stripchance || 0) + (atacante.trainedstripchance || 0);
+		var stripDef = defensor.stripdefchance || 0;
+		var dado = Math.ceil(Math.random() * 100) - stripBonus + stripDef;
 		var probabilidad = 10 + (100 - defensor.HP);
 		console.log("probabilidad: " + probabilidad + ", dado: " + dado);
 		if (dado <= probabilidad) {
@@ -649,6 +663,8 @@ function Combate() {
 		this.crits = true;
 		this.even = false;
 		this.pins = {};
+		this.pinTurns = {};
+		this.failedPinBonus = {};
 		this.handicapMode = false;
 	}
 	

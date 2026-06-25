@@ -38,7 +38,7 @@ function refreshLeaderboard(callback) {
 		if (err || !keys) { if (callback) callback(); return; }
 		var players = [];
 		var processed = 0;
-		var specialKeys = ["customshopitems", "subadmins", "motd"];
+		var specialKeys = ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"];
 		var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
 		if (validKeys.length === 0) { if (callback) callback(); return; }
 		validKeys.forEach(function(key) {
@@ -451,6 +451,18 @@ module.exports = function (parent, chanName) {
 		if (!isAdmin(data.character)) { return 0; }
 		var message = "Banned users: " + (bannedUsers.length > 0 ? bannedUsers.join(", ") : "None");
 		fChatLibInstance.sendPrivMessage(data.character, message);
+	}
+
+	cmdHandler.announce = function (args, data) {
+		if (!isAdmin(data.character)) { return 0; }
+		var msg = args.trim();
+		if (msg == "") { fChatLibInstance.sendPrivMessage(data.character, "Usage: !announce Your message here"); return 0; }
+		var announcement = "[color=yellow][b]ANNOUNCEMENT:[/b] " + msg + "[/color]";
+		var rooms = Object.keys(fChatLibInstance.channels);
+		for (var r = 0; r < rooms.length; r++) {
+			fChatLibInstance.sendMessage(announcement, rooms[r]);
+		}
+		fChatLibInstance.sendPrivMessage(data.character, "Announcement sent to " + rooms.length + " room(s).");
 	}
 
 	cmdHandler.editmotd = function (args, data) {
@@ -1367,6 +1379,82 @@ module.exports = function (parent, chanName) {
 		});
 	}
 	
+	cmdHandler.trainpin = function (args, data) {
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let current = parseInt(chara.pinchance) || 0;
+			if (current >= 90) { fChatLibInstance.sendPrivMessage(data.character, "Your pin chance is already at the maximum of 90%."); return 0; }
+			let sp = parseInt(chara.sp) || 0;
+			if (sp < 1) { fChatLibInstance.sendPrivMessage(data.character, "Not enough stat points. You need 1 stat point."); return 0; }
+			chara.sp = sp - 1;
+			chara.pinchance = current + 2;
+			client.hmset(data.character, chara);
+			let message = "Pin chance increased by 2%! You now have " + chara.pinchance + "% pin chance bonus (" + chara.sp + " stat points remaining).";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+	
+	cmdHandler.trainpindef = function (args, data) {
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let current = parseInt(chara.pindefchance) || 0;
+			if (current >= 90) { fChatLibInstance.sendPrivMessage(data.character, "Your pin defense is already at the maximum of 90%."); return 0; }
+			let sp = parseInt(chara.sp) || 0;
+			if (sp < 1) { fChatLibInstance.sendPrivMessage(data.character, "Not enough stat points. You need 1 stat point."); return 0; }
+			chara.sp = sp - 1;
+			chara.pindefchance = current + 2;
+			client.hmset(data.character, chara);
+			let message = "Pin defense increased by 2%! You now have " + chara.pindefchance + "% pin resistance bonus (" + chara.sp + " stat points remaining).";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+	
+	cmdHandler.trainsc = function (args, data) {
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let current = parseInt(chara.trainedstripchance) || 0;
+			if (current >= 90) { fChatLibInstance.sendPrivMessage(data.character, "Your strip chance is already at the maximum of 90%."); return 0; }
+			let sp = parseInt(chara.sp) || 0;
+			if (sp < 1) { fChatLibInstance.sendPrivMessage(data.character, "Not enough stat points. You need 1 stat point."); return 0; }
+			chara.sp = sp - 1;
+			chara.trainedstripchance = current + 2;
+			client.hmset(data.character, chara);
+			let message = "Strip chance increased by 2%! You now have " + chara.trainedstripchance + "% strip chance bonus (" + chara.sp + " stat points remaining).";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+	
+	cmdHandler.trainscdef = function (args, data) {
+		client.hgetall(data.character, function (err, chara) {
+			if (chara == null) {
+				let message = "You're not registered (or come from season one), use !register to join the club or !transfer to bring your character to the new season.";
+				data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+				return 0;
+			}
+			let current = parseInt(chara.stripdefchance) || 0;
+			if (current >= 90) { fChatLibInstance.sendPrivMessage(data.character, "Your strip defense is already at the maximum of 90%."); return 0; }
+			let sp = parseInt(chara.sp) || 0;
+			if (sp < 1) { fChatLibInstance.sendPrivMessage(data.character, "Not enough stat points. You need 1 stat point."); return 0; }
+			chara.sp = sp - 1;
+			chara.stripdefchance = current + 2;
+			client.hmset(data.character, chara);
+			let message = "Strip defense increased by 2%! You now have " + chara.stripdefchance + "% strip resistance bonus (" + chara.sp + " stat points remaining).";
+			data.publico ? fChatLibInstance.sendMessage(message, channel) : fChatLibInstance.sendPrivMessage(data.character, message);
+		});
+	}
+	
 	cmdHandler.look = function (args, data) {
 		client.hgetall(data.character, function (err, chara) {
 			if (chara == null) {
@@ -1494,7 +1582,7 @@ module.exports = function (parent, chanName) {
 	
 	cmdHandler.bettingOdds = function (args, data) {
 		if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started.", channel); return 0; }
-		if (Combate.betting == false) { fChatLibInstance.sendMessage("Betting isn't allowed in this match.", channel); return 0; }
+		//betting is now always allowed
 		if (Combate.teamsf) { fChatLibInstance.sendMessage("Betting doesn't work on teamfights.", channel); return 0; }
 		let odds = Combate.giveOdds();
 		fChatLibInstance.sendMessage(Combate.actores[0].name+" has an odd of "+odds[0]+"%, and "+Combate.actores[1].name+" has an odd of "+odds[1]+"%.", channel);
@@ -1503,7 +1591,7 @@ module.exports = function (parent, chanName) {
 	cmdHandler.bet = function (args, data) {
 		if (Combate.started == false) { fChatLibInstance.sendMessage("Combat hasn't started.", channel); return 0; }
 		if (Combate.teamsf) { fChatLibInstance.sendMessage("Betting doesn't work on teamfights.", channel); return 0; }
-		if (Combate.betting == false) { fChatLibInstance.sendMessage("Betting isn't allowed in this match.", channel); return 0; }
+		//betting is now always allowed
 		if (data.character == Combate.actores[0].name || data.character == Combate.actores[1].name) { fChatLibInstance.sendMessage("The participants of the match can't bet.", channel); return 0; }
 		let arr = args.split(" to ");
 		if (arr.length != 2) {fChatLibInstance.sendMessage("Incorrect spelling, remember to add 'to', like this: !bet 10 to Kenia Nya", channel); return 0; }
@@ -1635,6 +1723,7 @@ module.exports = function (parent, chanName) {
 			fChatLibInstance.sendMessage(messages[0], channel);
 			if (messages[1] != "") { fChatLibInstance.sendMessage(messages[1], channel); }
 			Combate.even = true;
+			Combate.betting = true;
 		});
 	}
 	
@@ -1887,6 +1976,25 @@ module.exports = function (parent, chanName) {
 									});
 								}
 							}
+					var betsOnWinner = 0, betsOnLoser = 0;
+					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+						else { betsOnLoser++; }
+					}
+					if (Combate.bettingPeople.length > 0) {
+						var winnerName = Combate.actores[1].name;
+						if (betsOnWinner > betsOnLoser) {
+							client.hgetall(winnerName, function (err, chara) {
+								if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
+							});
+							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+						} else if (betsOnWinner < betsOnLoser) {
+							client.hgetall(winnerName, function (err, chara) {
+								if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
+							});
+							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+						}
+					}
 						} else {
 							for (let i = 0; i < Combate.actores.length; i++) {
 								if (Combate.actores[i].team == Combate.checkVictory()) {
@@ -1949,6 +2057,25 @@ module.exports = function (parent, chanName) {
 							});
 						}
 					}
+						var betsOnWinner = 0, betsOnLoser = 0;
+						for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+							if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+							else { betsOnLoser++; }
+						}
+						if (Combate.bettingPeople.length > 0) {
+							var winnerName = Combate.actores[1].name;
+							if (betsOnWinner > betsOnLoser) {
+								client.hgetall(winnerName, function (err, chara) {
+									if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
+								});
+								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+							} else if (betsOnWinner < betsOnLoser) {
+								client.hgetall(winnerName, function (err, chara) {
+									if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
+								});
+								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+							}
+						}
 				} else {
 					for (let i = 0; i < Combate.actores.length; i++) {
 						if (Combate.actores[i].team == Combate.checkVictory()) {
@@ -2142,6 +2269,25 @@ module.exports = function (parent, chanName) {
 						});
 					}
 				}
+					var betsOnWinner = 0, betsOnLoser = 0;
+					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+						else { betsOnLoser++; }
+					}
+					if (Combate.bettingPeople.length > 0) {
+						var winnerName = Combate.actores[1].name;
+						if (betsOnWinner > betsOnLoser) {
+							client.hgetall(winnerName, function (err, chara) {
+								if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
+							});
+							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+						} else if (betsOnWinner < betsOnLoser) {
+							client.hgetall(winnerName, function (err, chara) {
+								if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
+							});
+							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+						}
+					}
 				
 			} else {
 				for (let i = 0; i < Combate.actores.length; i++) {
@@ -2258,6 +2404,25 @@ module.exports = function (parent, chanName) {
 							});
 						}
 					}
+						var betsOnWinner = 0, betsOnLoser = 0;
+						for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+							if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+							else { betsOnLoser++; }
+						}
+						if (Combate.bettingPeople.length > 0) {
+							var winnerName = Combate.actores[1].name;
+							if (betsOnWinner > betsOnLoser) {
+								client.hgetall(winnerName, function (err, chara) {
+									if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
+								});
+								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+							} else if (betsOnWinner < betsOnLoser) {
+								client.hgetall(winnerName, function (err, chara) {
+									if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
+								});
+								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+							}
+						}
 				}
 				Combate.reset();
 			}
@@ -2767,7 +2932,7 @@ module.exports = function (parent, chanName) {
 			}
 			var players = [];
 			var processed = 0;
-			var specialKeys = ["customshopitems", "subadmins", "motd"];
+			var specialKeys = ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"];
 			var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
 			if (validKeys.length === 0) {
 				data.publico ? fChatLibInstance.sendMessage("No players found.", channel) : fChatLibInstance.sendPrivMessage(data.character, "No players found.");
@@ -2800,6 +2965,53 @@ module.exports = function (parent, chanName) {
 							else if (i === 1) { medal = "\u{1F948} "; }
 							else if (i === 2) { medal = "\u{1F949} "; }
 							hoja += "          [b]#" + (i + 1) + "[/b] " + medal + "[icon]" + p.name + "[/icon] " + p.name + " - [b]" + p.wins + "W / " + p.loses + "L[/b]" + streak + "\n";
+						}
+						hoja += "[/color]";
+						data.publico ? fChatLibInstance.sendMessage(hoja, channel) : fChatLibInstance.sendPrivMessage(data.character, hoja);
+					}
+				});
+			});
+		});
+	}
+
+	cmdHandler.loserboard = function (args, data) {
+		refreshLeaderboard();
+		client.keys("*", function (err, keys) {
+			if (err || !keys || keys.length === 0) {
+				data.publico ? fChatLibInstance.sendMessage("No players found.", channel) : fChatLibInstance.sendPrivMessage(data.character, "No players found.");
+				return;
+			}
+			var players = [];
+			var processed = 0;
+			var specialKeys = ["customshopitems", "subadmins", "motd", "bannedusers", "savedfights", "savedfights2"];
+			var validKeys = keys.filter(function(k) { return specialKeys.indexOf(k) === -1; });
+			if (validKeys.length === 0) {
+				data.publico ? fChatLibInstance.sendMessage("No players found.", channel) : fChatLibInstance.sendPrivMessage(data.character, "No players found.");
+				return;
+			}
+			validKeys.forEach(function(key) {
+				client.hgetall(key, function (err, chara) {
+					processed++;
+					if (chara && chara.loses !== undefined && chara.name) {
+						var wins = parseInt(chara.wins) || 0;
+						var loses = parseInt(chara.loses) || 0;
+						var cwins = parseInt(chara.cwins) || 0;
+						var closes = parseInt(chara.closes) || 0;
+						players.push({ name: chara.name, wins: wins, loses: loses, cwins: cwins, closes: closes });
+					}
+					if (processed >= validKeys.length) {
+						players.sort(function(a, b) { return b.loses - a.loses; });
+						var top = players.slice(0, 20);
+						var hoja = "\n";
+						hoja += "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n";
+						hoja += "                              \u{1F4A5} \u{1F4A5} [color=red][b]Loserboard - Top 20[/b][/color] \u{1F4A5} \u{1F4A5}\n";
+						hoja += "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n[color=pink]";
+						for (var i = 0; i < top.length; i++) {
+							var p = top[i];
+							var streak = "";
+							if (p.closes >= 2) { streak = " [color=red]\u25BC" + p.closes + "L streak[/color]"; }
+							else if (p.cwins >= 2) { streak = " [color=green]\u25B2" + p.cwins + "W streak[/color]"; }
+							hoja += "          [b]#" + (i + 1) + "[/b] [icon]" + p.name + "[/icon] " + p.name + " - [b]" + p.loses + "L / " + p.wins + "W[/b]" + streak + "\n";
 						}
 						hoja += "[/color]";
 						data.publico ? fChatLibInstance.sendMessage(hoja, channel) : fChatLibInstance.sendPrivMessage(data.character, hoja);
