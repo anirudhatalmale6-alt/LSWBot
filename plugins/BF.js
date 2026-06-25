@@ -3500,8 +3500,9 @@ function loadData() {
 }
 
 function saveData(data) {
-	savedFightsCache = data;
-	client.set("savedfights", JSON.stringify(data));
+	var serialized = JSON.stringify(data);
+	savedFightsCache = JSON.parse(serialized);
+	client.set("savedfights", serialized);
 }
 
 function loadData2() {
@@ -3509,8 +3510,9 @@ function loadData2() {
 }
 
 function saveData2(data) {
-	savedFights2Cache = data;
-	client.set("savedfights2", JSON.stringify(data));
+	var serialized = JSON.stringify(data);
+	savedFights2Cache = JSON.parse(serialized);
+	client.set("savedfights2", serialized);
 }
 
 function searchDestinies(part) {
