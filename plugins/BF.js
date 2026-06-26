@@ -1972,10 +1972,20 @@ module.exports = function (parent, chanName) {
 					fChatLibInstance.sendMessage(message, channel);
 					if (Combate.started == false) { //si un participante o equipo perdió...
 						if (Combate.teamsf == false) {
-							client.hgetall(Combate.actores[1].name, function (err, chara1) {
+							var betsOnWinner = 0, betsOnLoser = 0;
+					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+						else { betsOnLoser++; }
+					}
+					var winnerBonus = 0;
+					if (Combate.bettingPeople.length > 0) {
+						if (betsOnWinner > betsOnLoser) { winnerBonus = 5; }
+						else if (betsOnWinner < betsOnLoser) { winnerBonus = 10; }
+					}
+					client.hgetall(Combate.actores[1].name, function (err, chara1) {
 								if (chara1 == null) { return 0; }
 								let pj1 = new Personaje(chara1);
-								pj1.addGold(5);
+								pj1.addGold(5 + winnerBonus);
 								pj1.addWin();
 								client.hmset(pj1.name, pj1.getSaveFile());
 							});
@@ -1997,24 +2007,10 @@ module.exports = function (parent, chanName) {
 									});
 								}
 							}
-					var betsOnWinner = 0, betsOnLoser = 0;
-					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
-						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
-						else { betsOnLoser++; }
-					}
-					if (Combate.bettingPeople.length > 0) {
-						var winnerName = Combate.actores[1].name;
-						if (betsOnWinner > betsOnLoser) {
-							client.hgetall(winnerName, function (err, chara) {
-								if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
-							});
-							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
-						} else if (betsOnWinner < betsOnLoser) {
-							client.hgetall(winnerName, function (err, chara) {
-								if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
-							});
-							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
-						}
+					if (winnerBonus == 5) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+					} else if (winnerBonus == 10) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
 					}
 						} else {
 							for (let i = 0; i < Combate.actores.length; i++) {
@@ -2053,10 +2049,20 @@ module.exports = function (parent, chanName) {
 			}
 			if (Combate.started == false) { //si un participante o equipo perdió...
 				if (Combate.teamsf == false) {
+					var betsOnWinner = 0, betsOnLoser = 0;
+					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+						else { betsOnLoser++; }
+					}
+					var winnerBonus = 0;
+					if (Combate.bettingPeople.length > 0) {
+						if (betsOnWinner > betsOnLoser) { winnerBonus = 5; }
+						else if (betsOnWinner < betsOnLoser) { winnerBonus = 10; }
+					}
 					client.hgetall(Combate.actores[1].name, function (err, chara1) {
 						if (chara1 == null) { return 0; }
 						let pj1 = new Personaje(chara1);
-						pj1.addGold(5);
+						pj1.addGold(5 + winnerBonus);
 						pj1.addWin();
 						client.hmset(pj1.name, pj1.getSaveFile());
 					});
@@ -2078,25 +2084,11 @@ module.exports = function (parent, chanName) {
 							});
 						}
 					}
-						var betsOnWinner = 0, betsOnLoser = 0;
-						for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
-							if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
-							else { betsOnLoser++; }
-						}
-						if (Combate.bettingPeople.length > 0) {
-							var winnerName = Combate.actores[1].name;
-							if (betsOnWinner > betsOnLoser) {
-								client.hgetall(winnerName, function (err, chara) {
-									if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
-								});
-								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
-							} else if (betsOnWinner < betsOnLoser) {
-								client.hgetall(winnerName, function (err, chara) {
-									if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
-								});
-								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
-							}
-						}
+					if (winnerBonus == 5) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+					} else if (winnerBonus == 10) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+					}
 				} else {
 					for (let i = 0; i < Combate.actores.length; i++) {
 						if (Combate.actores[i].team == Combate.checkVictory()) {
@@ -2262,10 +2254,20 @@ module.exports = function (parent, chanName) {
 			message += "\n[color=gray]════════════════ ⭐ [color=purple]Combat ended[/color] ⭐ ════════════════[/color]\n";
 			fChatLibInstance.sendMessage(message, channel);
 			if (Combate.teamsf == false) {
+				var betsOnWinner = 0, betsOnLoser = 0;
+				for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+					if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+					else { betsOnLoser++; }
+				}
+				var winnerBonus = 0;
+				if (Combate.bettingPeople.length > 0) {
+					if (betsOnWinner > betsOnLoser) { winnerBonus = 5; }
+					else if (betsOnWinner < betsOnLoser) { winnerBonus = 10; }
+				}
 				client.hgetall(Combate.actores[1].name, function (err, chara1) {
 					if (chara1 == null) { return 0; }
 					let pj1 = new Personaje(chara1);
-					pj1.addGold(5);
+					pj1.addGold(5 + winnerBonus);
 					pj1.addWin();
 					client.hmset(pj1.name, pj1.getSaveFile());
 				});
@@ -2275,11 +2277,7 @@ module.exports = function (parent, chanName) {
 					pj2.addLose();
 					client.hmset(pj2.name, pj2.getSaveFile());
 				});
-				console.log("betting people object: "+Combate.bettingPeople);
-				console.log("length: "+Combate.bettingPeople.length);
 				for (let i = 0; i < Combate.bettingPeople.length; i++) {
-					console.log("name: "+Combate.bettingPeople[i].name);
-					console.log("destiny: "+Combate.bettingPeople[i].destiny);
 					if (Combate.bettingPeople[i].destiny == Combate.actores[1].name) {
 						client.hgetall(Combate.bettingPeople[i].name, function (err, chara) {
 							if (chara == null) { return 0; }
@@ -2290,25 +2288,11 @@ module.exports = function (parent, chanName) {
 						});
 					}
 				}
-					var betsOnWinner = 0, betsOnLoser = 0;
-					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
-						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
-						else { betsOnLoser++; }
-					}
-					if (Combate.bettingPeople.length > 0) {
-						var winnerName = Combate.actores[1].name;
-						if (betsOnWinner > betsOnLoser) {
-							client.hgetall(winnerName, function (err, chara) {
-								if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
-							});
-							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
-						} else if (betsOnWinner < betsOnLoser) {
-							client.hgetall(winnerName, function (err, chara) {
-								if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
-							});
-							fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
-						}
-					}
+				if (winnerBonus == 5) {
+					fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+				} else if (winnerBonus == 10) {
+					fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+				}
 				
 			} else {
 				for (let i = 0; i < Combate.actores.length; i++) {
@@ -2403,13 +2387,25 @@ module.exports = function (parent, chanName) {
 			fChatLibInstance.sendMessage(message, channel);
 			if (Combate.started == false) {
 				if (Combate.teamsf == false) {
+					var betsOnWinner = 0, betsOnLoser = 0;
+					for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
+						if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
+						else { betsOnLoser++; }
+					}
+					var winnerBonus = 0;
+					if (Combate.bettingPeople.length > 0) {
+						if (betsOnWinner > betsOnLoser) { winnerBonus = 5; }
+						else if (betsOnWinner < betsOnLoser) { winnerBonus = 10; }
+					}
 					client.hgetall(Combate.actores[1].name, function (err, chara1) {
+						if (chara1 == null) { return 0; }
 						let pj1 = new Personaje(chara1);
-						pj1.addGold(5);
+						pj1.addGold(5 + winnerBonus);
 						pj1.addWin();
 						client.hmset(pj1.name, pj1.getSaveFile());
 					});
 					client.hgetall(Combate.actores[0].name, function (err, chara2) {
+						if (chara2 == null) { return 0; }
 						let pj2 = new Personaje(chara2);
 						pj2.addGold(5);
 						pj2.addLose();
@@ -2418,6 +2414,7 @@ module.exports = function (parent, chanName) {
 					for (let i = 0; i < Combate.bettingPeople.length; i++) {
 						if (Combate.bettingPeople[i].destiny == Combate.actores[1].name) {
 							client.hgetall(Combate.bettingPeople[i].name, function (err, chara) {
+								if (chara == null) { return 0; }
 								let cantidad = Math.round(Combate.bettingPeople[i].cantidad * (2-(Combate.bettingPeople[i].odds/100)));
 								chara.Gold = parseInt(chara.Gold) + cantidad;
 								client.hmset(chara.name, chara);
@@ -2425,25 +2422,11 @@ module.exports = function (parent, chanName) {
 							});
 						}
 					}
-						var betsOnWinner = 0, betsOnLoser = 0;
-						for (var bi = 0; bi < Combate.bettingPeople.length; bi++) {
-							if (Combate.bettingPeople[bi].destiny == Combate.actores[1].name) { betsOnWinner++; }
-							else { betsOnLoser++; }
-						}
-						if (Combate.bettingPeople.length > 0) {
-							var winnerName = Combate.actores[1].name;
-							if (betsOnWinner > betsOnLoser) {
-								client.hgetall(winnerName, function (err, chara) {
-									if (chara) { chara.Gold = parseInt(chara.Gold) + 5; client.hmset(winnerName, chara); }
-								});
-								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
-							} else if (betsOnWinner < betsOnLoser) {
-								client.hgetall(winnerName, function (err, chara) {
-									if (chara) { chara.Gold = parseInt(chara.Gold) + 10; client.hmset(winnerName, chara); }
-								});
-								fChatLibInstance.sendMessage("[color=yellow]" + winnerName + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
-							}
-						}
+					if (winnerBonus == 5) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the crowd favorite and gets a $5.00 bonus![/color]", channel);
+					} else if (winnerBonus == 10) {
+						fChatLibInstance.sendMessage("[color=yellow]" + Combate.actores[1].name + " was the underdog and gets a $10.00 bonus for beating the odds![/color]", channel);
+					}
 				}
 				Combate.reset();
 			}
